@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink, LayoutDashboard, LogOut, Users } from "lucide-react";
+import { ExternalLink, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/store/logo";
 import { LanguageSwitcher } from "@/components/store/language-switcher";
@@ -11,7 +11,7 @@ import { ADMIN_NAV } from "./nav";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-const ICONS = { dashboard: LayoutDashboard, staff: Users };
+const ICONS = { dashboard: LayoutDashboard, products: Package, categories: Tags, staff: Users };
 
 export default async function AdminPanelLayout({ children }: { children: React.ReactNode }) {
   const admin = await requireAdmin();

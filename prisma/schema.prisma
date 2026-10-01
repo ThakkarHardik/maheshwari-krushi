@@ -230,6 +230,8 @@ model Product {
   isActive       Boolean   @default(true)
   ratingAvg      Decimal   @default(0) @db.Decimal(3, 2)
   ratingCount    Int       @default(0)
+  /// Lowest active variant price — kept in sync by lib/catalog/variants.ts for sorting and listing.
+  minPrice       Decimal?  @db.Decimal(10, 2)
   seoTitle       String?
   seoDescription String?
   deletedAt      DateTime?
@@ -245,14 +247,17 @@ model Product {
 
   @@index([categoryId, isActive])
   @@index([isFeatured])
+  @@index([minPrice])
 }
 
 model ProductImage {
-  id        String  @id @default(cuid())
-  productId String
-  url       String
-  alt       String?
-  sortOrder Int     @default(0)
+  id         String  @id @default(cuid())
+  productId  String
+  url        String
+  /// Provider-prefixed key used to delete the file, e.g. "local:products/abc.jpg".
+  storageKey String?
+  alt        String?
+  sortOrder  Int     @default(0)
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 

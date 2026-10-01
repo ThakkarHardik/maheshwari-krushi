@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
+import { useFormSubmit } from "@/lib/use-form-submit";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { loginAction, type LoginState } from "./actions";
@@ -9,9 +10,10 @@ import { loginAction, type LoginState } from "./actions";
 export function LoginForm({ next }: { next?: string }) {
   const t = useTranslations("admin.login");
   const [state, formAction, pending] = useActionState<LoginState, FormData>(loginAction, {});
+  const onSubmit = useFormSubmit(formAction);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4">
       {next && <input type="hidden" name="next" value={next} />}
       <div>
         <Label htmlFor="email">{t("email")}</Label>

@@ -12,6 +12,12 @@ Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · PostgreSQL + Prisma 
 
 Requirements: Node.js 20+ and a PostgreSQL database (local, [Neon](https://neon.tech) or Supabase).
 
+No Postgres installed? Prisma ships a local one:
+
+```bash
+npx prisma dev --name mk --detach   # prints a postgres://… URL — put it in DATABASE_URL
+```
+
 ```bash
 npm install                      # also generates the Prisma client
 cp .env.example .env             # then fill in DATABASE_URL, AUTH_SECRET, SEED_OWNER_PASSWORD
@@ -33,6 +39,24 @@ Admin panel: http://localhost:3000/admin. Log in with `SEED_OWNER_EMAIL` and `SE
 | `npm run db:deploy` | Apply migrations |
 | `npm run db:seed` | Seed data (safe to re-run) |
 | `npm run db:studio` | Browse the database |
+
+## Database changes
+
+1. Edit `prisma/schema.prisma`.
+2. `npm run db:migrate -- --name <what_changed>` creates and applies a migration.
+   With the `prisma dev` local database (its default DB is `template1`, which breaks Prisma's shadow database), generate the SQL from the live DB instead:
+   ```bash
+   mkdir -p prisma/migrations/<timestamp>_<name>
+   npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script \
+     > prisma/migrations/<timestamp>_<name>/migration.sql
+   npm run db:deploy && npm run db:generate
+   ```
+
+## Product images
+
+`STORAGE_DRIVER=local` (default) saves uploads to `./uploads` and serves them from `/uploads/...` — for development only.
+In production set `STORAGE_DRIVER=cloudinary` and the three `CLOUDINARY_*` variables.
+Uploads are checked by file content (JPG / PNG / WebP only, max 3 MB, max 8 per product).
 
 ## Admin roles
 
