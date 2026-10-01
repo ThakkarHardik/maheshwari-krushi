@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { hasPermission } from "@/lib/auth/roles";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { getInventoryOverview, summarizeInventory } from "@/lib/inventory/overview";
 
 export default async function AdminDashboardPage({
   searchParams,
@@ -16,11 +17,13 @@ export default async function AdminDashboardPage({
 
   const canSeeEnquiries = hasPermission(admin.role, "enquiries:manage");
   const canSeeProducts = hasPermission(admin.role, "products:manage");
-  const [newEnquiries, activeProducts] = await Promise.all([
+  const canSeeStock = hasPermission(admin.role, "inventory:manage");
+  const [newEnquiries, activeProducts, stock] = await Promise.all([
     canSeeEnquiries ? db.enquiry.count({ where: { status: "NEW" } }) : null,
     canSeeProducts
       ? db.product.count({ where: { isActive: true, deletedAt: null, minPrice: { not: null } } })
       : null,
+    canSeeStock ? getInventoryOverview().then(summarizeInventory) : null,
   ]);
 
   return (
@@ -41,6 +44,28 @@ export default async function AdminDashboardPage({
               <p className="text-brand-800 text-3xl font-bold">{newEnquiries}</p>
               <Link href="/admin/enquiries?status=NEW" className="text-brand-700 text-sm hover:underline">
                 {t("dashboard.viewEnquiries")}
+              </Link>
+            </CardContent>
+          </Card>
+        )}
+        {stock && (
+          <Card className={stock.low + stock.out > 0 ? "border-accent-400" : undefined}>
+            <CardContent className="space-y-1 py-5">
+              <p className="text-muted-foreground text-sm">{t("dashboard.lowStock")}</p>
+              <p className="text-brand-800 text-3xl font-bold">{stock.low + stock.out}</p>
+              <Link href="/admin/inventory?filter=low" className="text-brand-700 text-sm hover:underline">
+                {t("dashboard.viewStock")}
+              </Link>
+            </CardContent>
+          </Card>
+        )}
+        {stock && (
+          <Card className={stock.nearExpiry + stock.expired > 0 ? "border-accent-400" : undefined}>
+            <CardContent className="space-y-1 py-5">
+              <p className="text-muted-foreground text-sm">{t("dashboard.nearExpiry")}</p>
+              <p className="text-brand-800 text-3xl font-bold">{stock.nearExpiry + stock.expired}</p>
+              <Link href="/admin/inventory?filter=near" className="text-brand-700 text-sm hover:underline">
+                {t("dashboard.viewStock")}
               </Link>
             </CardContent>
           </Card>
