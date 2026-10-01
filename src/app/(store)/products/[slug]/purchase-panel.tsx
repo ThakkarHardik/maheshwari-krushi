@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import Link from "next/link";
 import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { EnquiryDialog } from "@/components/store/enquiry-dialog";
 import { Button } from "@/components/ui/button";
+import { addToCartAction } from "@/lib/cart/actions";
 import { discountPercent, formatINR } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -40,9 +42,29 @@ export function PurchasePanel({
   const maxQty = Math.max(1, Math.min(MAX_QTY, variant.stock));
   const off = discountPercent(variant.mrp, variant.price);
   const inStock = variant.stock > 0;
+  const [pending, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<{ kind: "added" | "limited" | "error"; text: string } | null>(
+    null,
+  );
+
+  function add(buyNow: boolean) {
+    setFeedback(null);
+    startTransition(async () => {
+      // With buyNow the action redirects to checkout and doesn't return here.
+      const result = await addToCartAction({ variantId: variant.id, quantity: qty, buyNow });
+      if (!result.ok) {
+        setFeedback({ kind: "error", text: t(result.error === "outOfStock" ? "outOfStock" : "unavailable") });
+      } else if (result.error === "limited") {
+        setFeedback({ kind: "limited", text: t("limited", { count: result.available ?? 0 }) });
+      } else {
+        setFeedback({ kind: "added", text: t("added") });
+      }
+    });
+  }
 
   function choose(index: number) {
     setSelected(index);
+    setFeedback(null);
     setQty((q) => Math.min(q, Math.max(1, Math.min(MAX_QTY, variants[index].stock))));
   }
 
@@ -136,12 +158,17 @@ export function PurchasePanel({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        {/* Cart & checkout arrive in Phase 5. */}
-        <Button size="lg" disabled title={t("cartSoon")} className={ACTION_BUTTON}>
+        <Button size="lg" disabled={!inStock || pending} onClick={() => add(true)} className={ACTION_BUTTON}>
           <Zap /> {t("buyNow")}
         </Button>
-        <Button size="lg" variant="secondary" disabled title={t("cartSoon")} className={ACTION_BUTTON}>
-          <ShoppingCart /> {t("addToCart")}
+        <Button
+          size="lg"
+          variant="secondary"
+          disabled={!inStock || pending}
+          onClick={() => add(false)}
+          className={ACTION_BUTTON}
+        >
+          <ShoppingCart /> {pending ? t("adding") : t("addToCart")}
         </Button>
         <EnquiryDialog
           whatsapp={whatsapp}
@@ -154,7 +181,22 @@ export function PurchasePanel({
           label={t("enquiry")}
         />
       </div>
-      <p className="text-muted-foreground text-sm">{t("cartSoon")}</p>
+      {feedback && (
+        <p
+          role={feedback.kind === "error" ? "alert" : "status"}
+          className={cn(
+            "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md px-4 py-3 text-sm font-medium",
+            feedback.kind === "error" ? "text-danger bg-red-50" : "bg-brand-50 text-brand-800",
+          )}
+        >
+          {feedback.text}
+          {feedback.kind !== "error" && (
+            <Link href="/cart" className="text-brand-700 font-semibold underline">
+              {t("viewCart")} →
+            </Link>
+          )}
+        </p>
+      )}
     </div>
   );
 }

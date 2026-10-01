@@ -14,7 +14,7 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export function Header() {
+export function Header({ cartCount = 0 }: { cartCount?: number }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -55,10 +55,15 @@ export function Header() {
           </Link>
           <Link
             href="/cart"
-            aria-label={t("cart")}
-            className="text-brand-800 hover:bg-brand-50 flex size-11 items-center justify-center rounded-md"
+            aria-label={cartCount > 0 ? `${t("cart")} (${cartCount})` : t("cart")}
+            className="text-brand-800 hover:bg-brand-50 relative flex size-11 items-center justify-center rounded-md"
           >
             <ShoppingCart className="size-5" />
+            {cartCount > 0 && (
+              <span className="bg-accent-400 text-brand-900 absolute top-1 right-0.5 flex min-w-5 items-center justify-center rounded-full px-1 text-xs leading-5 font-bold">
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
           </Link>
           <button
             type="button"

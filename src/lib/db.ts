@@ -5,7 +5,9 @@ import { PrismaClient } from "@/generated/prisma/client";
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createClient() {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+  // The local `prisma dev` database (PGlite) handles one connection at a time: set DATABASE_POOL_MAX=1 for it.
+  const max = Number(process.env.DATABASE_POOL_MAX) || undefined;
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL, max });
   return new PrismaClient({ adapter });
 }
 
