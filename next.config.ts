@@ -6,6 +6,13 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   outputFileTracingRoot: process.cwd(),
+  experimental: {
+    // Product photo uploads: up to 3 photos × 3 MB per request.
+    serverActions: { bodySizeLimit: "10mb" },
+  },
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }],
+  },
   async headers() {
     return [
       {

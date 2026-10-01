@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { ProductCard } from "@/components/store/product-card";
 import { TrustStrip } from "@/components/store/trust-strip";
 import { Button } from "@/components/ui/button";
+import { getFeaturedProducts } from "@/lib/catalog/queries";
 
-// Phase 1: hero + trust strip. Featured products are added in Phase 2.
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const featured = await getFeaturedProducts(8);
 
   return (
     <>
@@ -24,6 +26,26 @@ export default async function HomePage() {
           <TrustStrip />
         </div>
       </section>
+
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 py-12" aria-labelledby="featured-heading">
+          <h2 id="featured-heading" className="text-brand-800 text-center text-2xl font-bold sm:text-3xl">
+            {t("featuredTitle")}
+          </h2>
+          <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {featured.map((product, i) => (
+              <li key={product.id}>
+                <ProductCard product={product} priority={i < 2} />
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8 text-center">
+            <Button asChild size="lg">
+              <Link href="/products">{t("viewAll")}</Link>
+            </Button>
+          </div>
+        </section>
+      )}
     </>
   );
 }

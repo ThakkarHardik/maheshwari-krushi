@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { useFormSubmit } from "@/lib/use-form-submit";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/input";
 import { ADMIN_ROLES } from "@/lib/auth/roles";
@@ -11,13 +12,14 @@ export function StaffForm() {
   const t = useTranslations("admin");
   const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, pending] = useActionState<CreateStaffState, FormData>(createStaffAction, {});
+  const onSubmit = useFormSubmit(formAction);
 
   useEffect(() => {
     if (state.ok) formRef.current?.reset();
   }, [state]);
 
   return (
-    <form ref={formRef} action={formAction} className="grid gap-4 sm:grid-cols-2">
+    <form ref={formRef} onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
       <div>
         <Label htmlFor="staff-name">{t("staff.name")}</Label>
         <Input id="staff-name" name="name" required minLength={2} maxLength={80} />

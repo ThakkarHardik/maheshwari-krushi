@@ -202,6 +202,12 @@ async function main() {
       create: { sku, productId: product.id, ...variantData },
     });
 
+    const { _min } = await db.productVariant.aggregate({
+      where: { productId: product.id, isActive: true },
+      _min: { price: true },
+    });
+    await db.product.update({ where: { id: product.id }, data: { minPrice: _min.price } });
+
     // Opening stock: one batch per variant, only on the first run.
     const batchNo = "OPENING-001";
     const batch = await db.inventoryBatch.findUnique({
