@@ -18,6 +18,8 @@ No Postgres installed? Prisma ships a local one:
 npx prisma dev --name mk --detach   # prints a postgres://… URL — put it in DATABASE_URL
 ```
 
+This local database accepts one connection at a time, so also set `DATABASE_POOL_MAX=1` in `.env` (not needed for real PostgreSQL).
+
 ```bash
 npm install                      # also generates the Prisma client
 cp .env.example .env             # then fill in DATABASE_URL, AUTH_SECRET, SEED_OWNER_PASSWORD
@@ -35,6 +37,7 @@ Admin panel: http://localhost:3000/admin. Log in with `SEED_OWNER_EMAIL` and `SE
 | `npm run dev` | Start the development server |
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` · `npm run typecheck` · `npm test` | ESLint · TypeScript · unit tests |
+| `npm run test:int` | Integration tests against the database in `DATABASE_URL` (creates and removes its own test data) |
 | `npm run db:migrate` | Create a new migration after changing `prisma/schema.prisma` |
 | `npm run db:deploy` | Apply migrations |
 | `npm run db:seed` | Seed data (safe to re-run) |

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { submitEnquiryAction, type EnquiryState } from "@/lib/enquiry/actions";
 import { composeWhatsAppText, enquirySchema } from "@/lib/enquiry/schema";
+import { useEditableErrors } from "@/lib/use-editable-errors";
 import { useFormSubmit } from "@/lib/use-form-submit";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
@@ -40,7 +41,7 @@ export function EnquiryForm({ whatsapp, defaultMessage, productId, productName, 
   const [sentVia, setSentVia] = useState<"whatsapp" | null>(null);
   const [submittedMobile, setSubmittedMobile] = useState("");
 
-  const errors = localErrors ?? state.errors;
+  const [errors, markEdited] = useEditableErrors(localErrors ?? state.errors);
   const fieldError = (name: string) =>
     errors?.[name] ? (
       <p id={`enq-${name}-error`} className="text-danger mt-1 text-sm">
@@ -96,6 +97,7 @@ export function EnquiryForm({ whatsapp, defaultMessage, productId, productName, 
         setSubmittedMobile(data.mobile);
         onSubmit(e);
       }}
+      onChange={markEdited}
       noValidate
       className="space-y-4"
     >
