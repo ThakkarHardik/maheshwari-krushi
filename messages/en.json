@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Maheshwari Krishi Sewa Kendra – Seeds, Plant Tonics, Fodder",
+    "description": "Trusted agri-input store in Sailana, Ratlam. Right advice • Right product • Right price. Order online."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About us",
+    "products": "Products",
+    "cart": "Cart",
+    "contact": "Contact",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "language": "Language"
+  },
+  "home": {
+    "heroTitle": "Better products, better harvest",
+    "heroTagline": "Right advice • Right product • Right price",
+    "shopNow": "Shop now",
+    "featuredTitle": "Our featured products",
+    "viewAll": "View all products"
+  },
+  "trust": {
+    "securePayment": "Secure payment",
+    "quality": "Best quality",
+    "fastDelivery": "Fast delivery",
+    "trust": "100% trust"
+  },
+  "about": {
+    "title": "About us",
+    "body": "Maheshwari Krishi Sewa Kendra in Sailana (District Ratlam) is dedicated to serving farmers. We supply quality seeds, plant tonics, animal fodder seeds and other farm inputs at the right price, along with the right advice for your crop.",
+    "promise": "Our promise: Right advice • Right product • Right price"
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Reach out to us for any product or order related query.",
+    "address": "Address",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "chatOnWhatsapp": "Chat on WhatsApp",
+    "callNow": "Call now"
+  },
+  "footer": {
+    "about": "Sailana's trusted krishi sewa kendra — now online.",
+    "quickLinks": "Quick links",
+    "contactUs": "Contact",
+    "licence": "Licence No.",
+    "gstin": "GSTIN",
+    "rights": "All rights reserved."
+  },
+  "whatsapp": {
+    "floatingLabel": "Ask on WhatsApp",
+    "defaultMessage": "Hello, I would like to know about your products."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "Sorry, this page is not available.",
+    "goHome": "Go to home page"
+  },
+  "admin": {
+    "panelTitle": "Admin panel",
+    "login": {
+      "title": "Admin login",
+      "subtitle": "Sign in with your email and password",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "invalid": "Incorrect email or password.",
+      "locked": "Too many failed attempts. Please try again in 15 minutes.",
+      "backToStore": "Back to website"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "staff": "Staff",
+      "logout": "Log out",
+      "viewStore": "View website"
+    },
+    "roles": {
+      "OWNER": "Owner",
+      "MANAGER": "Manager",
+      "PACKER": "Packer"
+    },
+    "dashboard": {
+      "welcome": "Hello, {name}",
+      "role": "Your role: {role}",
+      "denied": "You don't have permission to view that page.",
+      "comingSoon": "Orders, stock and reports will appear here in the next phases."
+    },
+    "staff": {
+      "title": "Staff",
+      "subtitle": "People who can use the admin panel",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "lastLogin": "Last login",
+      "never": "Never",
+      "you": "(you)",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "addTitle": "Add staff member",
+      "password": "Initial password (min. 10 characters)",
+      "add": "Add",
+      "adding": "Adding…",
+      "added": "Staff member added.",
+      "emailTaken": "An account with this email already exists.",
+      "invalid": "Please fill in all fields correctly.",
+      "cannotChangeSelf": "You cannot deactivate your own account.",
+      "lastOwner": "There must be at least one active owner."
+    }
+  }
+}

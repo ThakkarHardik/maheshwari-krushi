@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * Maheshwari Krishi Sewa Kendra design tokens (from the client mock-up):
+ * dark green primary, light green surfaces, yellow for Enquiry / WhatsApp.
+ */
+@theme {
+  --font-sans: var(--font-mukta), "Noto Sans Devanagari", system-ui, sans-serif;
+
+  --color-brand-50: #f1f8e9;
+  --color-brand-100: #dcedc8;
+  --color-brand-200: #c5e1a5;
+  --color-brand-500: #43a047;
+  --color-brand-600: #2e7d32;
+  --color-brand-700: #1b5e20;
+  --color-brand-800: #154a19;
+  --color-brand-900: #0f3812;
+
+  --color-accent-300: #fbe38a;
+  --color-accent-400: #f9d65c;
+  --color-accent-500: #f2c230;
+
+  --color-whatsapp: #25d366;
+
+  --color-background: #ffffff;
+  --color-foreground: #1f2a1f;
+  --color-muted: #f6f8f4;
+  --color-muted-foreground: #5b6b5b;
+  --color-border: #dfe6da;
+  --color-ring: #2e7d32;
+  --color-danger: #c62828;
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
