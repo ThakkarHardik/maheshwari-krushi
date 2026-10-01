@@ -37,7 +37,7 @@ Admin panel: http://localhost:3000/admin. Log in with `SEED_OWNER_EMAIL` and `SE
 | `npm run dev` | Start the development server |
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` · `npm run typecheck` · `npm test` | ESLint · TypeScript · unit tests |
-| `npm run test:int` | Integration tests against the database in `DATABASE_URL` (creates and removes its own test data) |
+| `npm run test:int` | Integration tests against a **local or dedicated test** database (they use up order/invoice numbers — never run on production; non-local URLs need `ALLOW_DB_TESTS=1`) |
 | `npm run db:migrate` | Create a new migration after changing `prisma/schema.prisma` |
 | `npm run db:deploy` | Apply migrations |
 | `npm run db:seed` | Seed data (safe to re-run) |

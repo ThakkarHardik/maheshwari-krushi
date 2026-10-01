@@ -168,7 +168,7 @@ export async function placeOrder(cartId: string, input: CheckoutInput) {
           igstTotal: money(totals.igst),
           grandTotal: money(totals.grandTotal),
           customerNote: input.note,
-          statusHistory: { create: { toStatus: "PENDING", note: "Order placed (COD)" } },
+          statusHistory: { create: { toStatus: "PENDING" } },
         },
       });
 

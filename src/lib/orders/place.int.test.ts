@@ -43,7 +43,14 @@ beforeAll(async () => {
       categoryId: category.id,
       minPrice: "100",
       variants: {
-        create: { sku: tag.toUpperCase(), label: "1 किलो", packSize: "1", unit: "KG", mrp: "120", price: "100" },
+        create: {
+          sku: tag.toUpperCase(),
+          label: "1 किलो",
+          packSize: "1",
+          unit: "KG",
+          mrp: "120",
+          price: "100",
+        },
       },
     },
     include: { variants: true },
@@ -54,8 +61,20 @@ beforeAll(async () => {
   // Two batches: the later-expiring one was received first, to prove FEFO ignores receipt order.
   await db.inventoryBatch.createMany({
     data: [
-      { variantId, batchNo: "LATE", qtyReceived: 2, qtyAvailable: 2, expiryDate: new Date(Date.now() + 300 * day) },
-      { variantId, batchNo: "SOON", qtyReceived: 2, qtyAvailable: 2, expiryDate: new Date(Date.now() + 90 * day) },
+      {
+        variantId,
+        batchNo: "LATE",
+        qtyReceived: 2,
+        qtyAvailable: 2,
+        expiryDate: new Date(Date.now() + 300 * day),
+      },
+      {
+        variantId,
+        batchNo: "SOON",
+        qtyReceived: 2,
+        qtyAvailable: 2,
+        expiryDate: new Date(Date.now() + 90 * day),
+      },
     ],
   });
 });

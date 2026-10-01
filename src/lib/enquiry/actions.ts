@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { notify, OWNER_MOBILE } from "@/lib/notifications";
 import { ENQUIRY_LIMIT, ENQUIRY_WINDOW_MINUTES, enquirySchema, looksLikeBot } from "./schema";
 
 export type EnquiryState = {
@@ -33,7 +34,10 @@ export async function submitEnquiryAction(_prev: EnquiryState, formData: FormDat
 
   const [product, customer] = await Promise.all([
     input.productId
-      ? db.product.findFirst({ where: { id: input.productId, deletedAt: null }, select: { id: true } })
+      ? db.product.findFirst({
+          where: { id: input.productId, deletedAt: null },
+          select: { id: true, nameHi: true },
+        })
       : null,
     db.customer.findUnique({ where: { mobile: input.mobile }, select: { id: true } }),
   ]);
@@ -47,6 +51,12 @@ export async function submitEnquiryAction(_prev: EnquiryState, formData: FormDat
       productId: product?.id ?? null,
       customerId: customer?.id ?? null,
     },
+  });
+  await notify({
+    event: "OWNER_NEW_ENQUIRY",
+    to: OWNER_MOBILE,
+    audience: "OWNER",
+    vars: { name: input.name, mobile: input.mobile, product: product?.nameHi },
   });
   revalidatePath("/admin/enquiries");
   revalidatePath("/admin");

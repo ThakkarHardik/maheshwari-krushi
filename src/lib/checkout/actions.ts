@@ -7,6 +7,8 @@ import { getCart } from "@/lib/cart/server";
 import { db } from "@/lib/db";
 import { quoteDelivery, type DeliveryQuote } from "@/lib/delivery";
 import { PlaceOrderFailure, placeOrder } from "@/lib/orders/place";
+import { formatINR } from "@/lib/format";
+import { notify, OWNER_MOBILE } from "@/lib/notifications";
 import { getSetting } from "@/lib/settings";
 import { checkoutSchema, LAST_ORDER_COOKIE } from "./schema";
 
@@ -40,7 +42,29 @@ export async function placeOrderAction(_prev: CheckoutState, formData: FormData)
 
   let orderNumber: string;
   try {
-    ({ orderNumber } = await placeOrder(cartId, parsed.data));
+    const placed = await placeOrder(cartId, parsed.data);
+    orderNumber = placed.orderNumber;
+    const vars = {
+      name: parsed.data.name,
+      mobile: parsed.data.mobile,
+      city: parsed.data.city,
+      orderNumber,
+      total: formatINR(placed.grandTotal / 100),
+    };
+    await notify({
+      event: "ORDER_PLACED",
+      to: parsed.data.mobile,
+      audience: "CUSTOMER",
+      orderId: placed.orderId,
+      vars,
+    });
+    await notify({
+      event: "OWNER_NEW_ORDER",
+      to: OWNER_MOBILE,
+      audience: "OWNER",
+      orderId: placed.orderId,
+      vars,
+    });
   } catch (error) {
     if (error instanceof PlaceOrderFailure) {
       const field = error.code === "invalidPincode" || error.code === "notServiceable" ? "pincode" : "_form";
@@ -61,5 +85,7 @@ export async function placeOrderAction(_prev: CheckoutState, formData: FormData)
   });
   revalidatePath("/", "layout");
   revalidatePath("/admin/inventory");
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
   redirect("/order/success");
 }

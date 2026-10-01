@@ -63,6 +63,9 @@ export default async function OrderSuccessPage() {
           <Button asChild size="lg">
             <Link href="/">{t("home")}</Link>
           </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href={`/track?order=${order.orderNumber}`}>{t("track")}</Link>
+          </Button>
           <Button asChild size="lg" variant="accent">
             <a
               href={buildWhatsAppLink(
