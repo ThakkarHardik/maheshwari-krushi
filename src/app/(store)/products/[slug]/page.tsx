@@ -139,7 +139,12 @@ export default async function ProductPage({ params }: { params: Params }) {
             </div>
           </div>
 
-          <PurchasePanel productName={name} variants={variants} whatsapp={storeConfig.whatsapp} />
+          <PurchasePanel
+            productId={product.id}
+            productName={name}
+            variants={variants}
+            whatsapp={storeConfig.whatsapp}
+          />
         </div>
       </div>
 

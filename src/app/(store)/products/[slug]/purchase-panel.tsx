@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Minus, Plus, ShoppingCart, MessageCircle, Zap } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { EnquiryDialog } from "@/components/store/enquiry-dialog";
 import { Button } from "@/components/ui/button";
 import { discountPercent, formatINR } from "@/lib/format";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 
 export type PanelVariant = {
@@ -22,10 +22,12 @@ const MAX_QTY = 99;
 const ACTION_BUTTON = "h-auto min-h-12 py-2 text-base leading-tight whitespace-normal";
 
 export function PurchasePanel({
+  productId,
   productName,
   variants,
   whatsapp,
 }: {
+  productId: string;
   productName: string;
   variants: PanelVariant[];
   whatsapp: string;
@@ -43,11 +45,6 @@ export function PurchasePanel({
     setSelected(index);
     setQty((q) => Math.min(q, Math.max(1, Math.min(MAX_QTY, variants[index].stock))));
   }
-
-  const whatsappHref = buildWhatsAppLink(
-    whatsapp,
-    t("whatsappMessage", { product: productName, variant: variant.label, qty }),
-  );
 
   return (
     <div className="space-y-5">
@@ -146,11 +143,16 @@ export function PurchasePanel({
         <Button size="lg" variant="secondary" disabled title={t("cartSoon")} className={ACTION_BUTTON}>
           <ShoppingCart /> {t("addToCart")}
         </Button>
-        <Button asChild size="lg" variant="accent" className={ACTION_BUTTON}>
-          <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-            <MessageCircle /> {t("enquiry")}
-          </a>
-        </Button>
+        <EnquiryDialog
+          whatsapp={whatsapp}
+          productId={productId}
+          productName={`${productName} (${variant.label})`}
+          getDefaultMessage={() =>
+            t("whatsappMessage", { product: productName, variant: variant.label, qty })
+          }
+          triggerClassName={ACTION_BUTTON}
+          label={t("enquiry")}
+        />
       </div>
       <p className="text-muted-foreground text-sm">{t("cartSoon")}</p>
     </div>

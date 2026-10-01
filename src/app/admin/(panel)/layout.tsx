@@ -1,22 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
+import { ExternalLink, Inbox, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/store/logo";
 import { LanguageSwitcher } from "@/components/store/language-switcher";
 import { hasPermission } from "@/lib/auth/roles";
 import { requireAdmin } from "@/lib/auth/session";
+import { db } from "@/lib/db";
 import { logoutAction } from "../login/actions";
 import { ADMIN_NAV } from "./nav";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-const ICONS = { dashboard: LayoutDashboard, products: Package, categories: Tags, staff: Users };
+const ICONS = {
+  dashboard: LayoutDashboard,
+  products: Package,
+  categories: Tags,
+  enquiries: Inbox,
+  staff: Users,
+};
 
 export default async function AdminPanelLayout({ children }: { children: React.ReactNode }) {
   const admin = await requireAdmin();
   const t = await getTranslations("admin");
   const items = ADMIN_NAV.filter((item) => hasPermission(admin.role, item.permission));
+  const badges: Partial<Record<(typeof ADMIN_NAV)[number]["key"], number>> = {
+    enquiries: hasPermission(admin.role, "enquiries:manage")
+      ? await db.enquiry.count({ where: { status: "NEW" } })
+      : 0,
+  };
 
   return (
     <div className="bg-muted min-h-dvh md:flex">
@@ -36,6 +48,11 @@ export default async function AdminPanelLayout({ children }: { children: React.R
                   >
                     <Icon className="text-brand-600 size-4" aria-hidden />
                     {t(`nav.${item.key}`)}
+                    {(badges[item.key] ?? 0) > 0 && (
+                      <span className="bg-accent-400 text-brand-900 ml-auto rounded-full px-2 text-xs font-bold">
+                        {badges[item.key]}
+                      </span>
+                    )}
                   </Link>
                 </li>
               );

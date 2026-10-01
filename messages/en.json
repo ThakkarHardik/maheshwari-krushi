@@ -78,7 +78,8 @@
       "logout": "Log out",
       "viewStore": "View website",
       "categories": "Categories",
-      "products": "Products"
+      "products": "Products",
+      "enquiries": "Enquiries"
     },
     "roles": {
       "OWNER": "Owner",
@@ -89,7 +90,10 @@
       "welcome": "Hello, {name}",
       "role": "Your role: {role}",
       "denied": "You don't have permission to view that page.",
-      "comingSoon": "Orders, stock and reports will appear here in the next phases."
+      "comingSoon": "Orders, stock and reports will appear here in the next phases.",
+      "newEnquiries": "New enquiries",
+      "viewEnquiries": "View enquiries →",
+      "activeProducts": "Products on website"
     },
     "staff": {
       "title": "Staff",
@@ -262,6 +266,41 @@
           "failed": "Upload failed, please try again."
         }
       }
+    },
+    "enquiries": {
+      "title": "Enquiries",
+      "subtitle": "Customer enquiries from the website",
+      "all": "All",
+      "empty": "No enquiries in this list.",
+      "date": "Date",
+      "customer": "Customer",
+      "product": "Product",
+      "message": "Message",
+      "status": "Status",
+      "source": "Source",
+      "statuses": {
+        "NEW": "New",
+        "CONTACTED": "Contacted",
+        "CONVERTED": "Converted",
+        "CLOSED": "Closed"
+      },
+      "sources": {
+        "FORM": "Form",
+        "WHATSAPP": "WhatsApp"
+      },
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "open": "Open",
+      "back": "← All enquiries",
+      "detailTitle": "Enquiry — {name}",
+      "receivedAt": "Received: {date}",
+      "general": "General enquiry",
+      "adminNote": "Internal note (not shown to the customer)",
+      "save": "Save",
+      "saved": "Saved.",
+      "replyMessage": "Namaste {name} ji, this is Maheshwari Krishi Sewa Kendra about your enquiry —",
+      "existingCustomer": "Existing customer",
+      "previous": "Earlier enquiries from this number: {count}"
     }
   },
   "products": {
@@ -318,5 +357,35 @@
     "imageAlt": "{name} — photo {n}",
     "showImage": "Show photo {n}",
     "noImage": "No photo available"
+  },
+  "enquiry": {
+    "title": "Enquiry / WhatsApp",
+    "subtitle": "Share your name and mobile number — we'll get back to you soon.",
+    "about": "Product: {product}",
+    "name": "Your name*",
+    "namePlaceholder": "Enter your name",
+    "mobile": "Mobile number*",
+    "mobilePlaceholder": "10-digit mobile number",
+    "message": "Message*",
+    "send": "Send enquiry",
+    "sending": "Sending…",
+    "sendWhatsapp": "Send on WhatsApp",
+    "or": "or",
+    "close": "Close",
+    "successTitle": "Thank you!",
+    "success": "We have received your enquiry and will contact you on {mobile} soon.",
+    "successWhatsapp": "WhatsApp is open — please send the message there. Your enquiry is also saved with us.",
+    "contactTitle": "Send us a message",
+    "defaultMessage": "Hello, I would like some information.",
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "invalidMobile": "Enter a valid 10-digit mobile number.",
+      "messageRequired": "Please write your message (at least 5 characters).",
+      "tooLong": "Too long.",
+      "invalid": "Please enter a valid value.",
+      "tooMany": "You have sent several enquiries recently. Please try again later or call us.",
+      "failed": "Could not send. Please try again or call us."
+    }
   }
 }

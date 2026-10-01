@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { EnquiryForm } from "@/components/store/enquiry-form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { storeConfig } from "@/config/store";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
@@ -14,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const t = await getTranslations("contact");
   const tWa = await getTranslations("whatsapp");
+  const tEnq = await getTranslations("enquiry");
 
   const rows = [
     { icon: MapPin, label: t("address"), value: storeConfig.addressHi },
@@ -67,6 +69,16 @@ export default async function ContactPage() {
           </a>
         </Button>
       </div>
+
+      <Card className="mt-10">
+        <CardHeader>
+          <CardTitle>{tEnq("contactTitle")}</CardTitle>
+          <p className="text-muted-foreground text-sm">{tEnq("subtitle")}</p>
+        </CardHeader>
+        <CardContent className="py-5">
+          <EnquiryForm whatsapp={storeConfig.whatsapp} defaultMessage={tEnq("defaultMessage")} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
