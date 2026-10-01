@@ -120,7 +120,11 @@ export default async function EditProductPage({
                       <td className="py-2 pr-3 font-mono text-xs">{v.sku}</td>
                       <td className="py-2 pr-3">{formatINR(v.mrp)}</td>
                       <td className="py-2 pr-3">{formatINR(v.price)}</td>
-                      <td className="py-2 pr-3">{v.batches.reduce((s, b) => s + b.qtyAvailable, 0)}</td>
+                      <td className="py-2 pr-3">
+                        <Link href={`/admin/inventory/${v.id}`} className="text-brand-700 hover:underline">
+                          {v.batches.reduce((s, b) => s + b.qtyAvailable, 0)}
+                        </Link>
+                      </td>
                       <td className="py-2 pr-3">
                         <span className={v.isActive ? "text-brand-700" : "text-muted-foreground"}>
                           {v.isActive ? tc("active") : tc("inactive")}

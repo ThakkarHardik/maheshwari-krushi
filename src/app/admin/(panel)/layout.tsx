@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ExternalLink, Inbox, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
+import { Boxes, ExternalLink, Inbox, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/store/logo";
 import { LanguageSwitcher } from "@/components/store/language-switcher";
 import { hasPermission } from "@/lib/auth/roles";
 import { requireAdmin } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { getInventoryOverview, summarizeInventory } from "@/lib/inventory/overview";
 import { logoutAction } from "../login/actions";
 import { ADMIN_NAV } from "./nav";
 
@@ -16,6 +17,7 @@ const ICONS = {
   dashboard: LayoutDashboard,
   products: Package,
   categories: Tags,
+  inventory: Boxes,
   enquiries: Inbox,
   staff: Users,
 };
@@ -24,10 +26,13 @@ export default async function AdminPanelLayout({ children }: { children: React.R
   const admin = await requireAdmin();
   const t = await getTranslations("admin");
   const items = ADMIN_NAV.filter((item) => hasPermission(admin.role, item.permission));
+  const canSeeStock = hasPermission(admin.role, "inventory:manage");
+  const stock = canSeeStock ? summarizeInventory(await getInventoryOverview()) : null;
   const badges: Partial<Record<(typeof ADMIN_NAV)[number]["key"], number>> = {
     enquiries: hasPermission(admin.role, "enquiries:manage")
       ? await db.enquiry.count({ where: { status: "NEW" } })
       : 0,
+    inventory: stock ? stock.low + stock.out : 0,
   };
 
   return (

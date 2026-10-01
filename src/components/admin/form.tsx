@@ -6,8 +6,17 @@ import { cn } from "@/lib/utils";
 
 type Errors = Record<string, string> | undefined;
 
-export function FieldError({ name, errors }: { name: string; errors: Errors }) {
-  const t = useTranslations("admin.errors");
+export function FieldError({
+  name,
+  errors,
+  ns = "admin.errors",
+}: {
+  name: string;
+  errors: Errors;
+  /** Messages namespace holding the error keys. */
+  ns?: string;
+}) {
+  const t = useTranslations(ns);
   const key = errors?.[name];
   if (!key) return null;
   return (
@@ -21,12 +30,20 @@ function describedBy(name: string, errors: Errors) {
   return errors?.[name] ? `${name}-error` : undefined;
 }
 
-type FieldProps = { name: string; label: string; errors: Errors; hint?: React.ReactNode; className?: string };
+type FieldProps = {
+  name: string;
+  label: string;
+  errors: Errors;
+  errorNs?: string;
+  hint?: React.ReactNode;
+  className?: string;
+};
 
 export function TextField({
   name,
   label,
   errors,
+  errorNs,
   hint,
   className,
   ...props
@@ -43,7 +60,7 @@ export function TextField({
         {...props}
       />
       {hint && <p className="text-muted-foreground mt-1 text-xs">{hint}</p>}
-      <FieldError name={name} errors={errors} />
+      <FieldError name={name} errors={errors} ns={errorNs} />
     </div>
   );
 }
@@ -52,6 +69,7 @@ export function TextAreaField({
   name,
   label,
   errors,
+  errorNs,
   hint,
   className,
   ...props
@@ -72,7 +90,7 @@ export function TextAreaField({
         {...props}
       />
       {hint && <p className="text-muted-foreground mt-1 text-xs">{hint}</p>}
-      <FieldError name={name} errors={errors} />
+      <FieldError name={name} errors={errors} ns={errorNs} />
     </div>
   );
 }
@@ -81,6 +99,7 @@ export function SelectField({
   name,
   label,
   errors,
+  errorNs,
   className,
   children,
   ...props
@@ -97,7 +116,7 @@ export function SelectField({
       >
         {children}
       </Select>
-      <FieldError name={name} errors={errors} />
+      <FieldError name={name} errors={errors} ns={errorNs} />
     </div>
   );
 }
