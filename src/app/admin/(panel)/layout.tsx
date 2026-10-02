@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  BarChart3,
   Boxes,
   ExternalLink,
   Inbox,
   LayoutDashboard,
   LogOut,
   Package,
+  Settings,
   ShoppingBag,
+  Star,
   Tags,
   Users,
 } from "lucide-react";
@@ -30,7 +33,10 @@ const ICONS = {
   categories: Tags,
   inventory: Boxes,
   enquiries: Inbox,
+  reviews: Star,
+  reports: BarChart3,
   staff: Users,
+  settings: Settings,
 };
 
 export default async function AdminPanelLayout({ children }: { children: React.ReactNode }) {
@@ -45,6 +51,9 @@ export default async function AdminPanelLayout({ children }: { children: React.R
       : 0,
     inventory: stock ? stock.low + stock.out : 0,
     orders: await db.order.count({ where: { status: "PENDING" } }),
+    reviews: hasPermission(admin.role, "reviews:manage")
+      ? await db.review.count({ where: { status: "PENDING" } })
+      : 0,
   };
 
   return (
