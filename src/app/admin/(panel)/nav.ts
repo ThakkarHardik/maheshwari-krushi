@@ -8,5 +8,8 @@ export const ADMIN_NAV = [
   { href: "/admin/categories", key: "categories", permission: "products:manage", icon: "categories" },
   { href: "/admin/inventory", key: "inventory", permission: "inventory:manage", icon: "inventory" },
   { href: "/admin/enquiries", key: "enquiries", permission: "enquiries:manage", icon: "enquiries" },
+  { href: "/admin/reviews", key: "reviews", permission: "reviews:manage", icon: "reviews" },
+  { href: "/admin/reports", key: "reports", permission: "reports:view", icon: "reports" },
   { href: "/admin/staff", key: "staff", permission: "staff:manage", icon: "staff" },
+  { href: "/admin/settings", key: "settings", permission: "settings:manage", icon: "settings" },
 ] as const satisfies ReadonlyArray<{ href: string; key: string; permission: Permission; icon: string }>;

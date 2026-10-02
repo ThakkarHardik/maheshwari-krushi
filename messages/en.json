@@ -82,7 +82,10 @@
       "products": "Products",
       "enquiries": "Enquiries",
       "inventory": "Stock",
-      "orders": "Orders"
+      "orders": "Orders",
+      "reviews": "Reviews",
+      "reports": "Reports",
+      "settings": "Settings"
     },
     "roles": {
       "OWNER": "Owner",
@@ -103,7 +106,8 @@
       "newOrders": "New orders (to confirm)",
       "viewOrders": "View orders →",
       "todaySales": "Today's sales",
-      "todayOrders": "{count} orders"
+      "todayOrders": "{count} orders",
+      "viewReports": "View full reports →"
     },
     "staff": {
       "title": "Staff",
@@ -511,6 +515,111 @@
         "alreadyCollected": "Cash is already recorded.",
         "invalid": "Please enter valid details."
       }
+    },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "Customer reviews — shown on the website only after approval",
+      "statuses": {
+        "PENDING": "To approve",
+        "APPROVED": "Approved",
+        "HIDDEN": "Hidden"
+      },
+      "all": "All",
+      "empty": "No reviews in this list.",
+      "approve": "Approve",
+      "hide": "Hide",
+      "product": "Product",
+      "noComment": "(rating only)"
+    },
+    "reports": {
+      "title": "Reports",
+      "subtitle": "Sales, GST and stock figures",
+      "from": "From",
+      "to": "To",
+      "show": "Show",
+      "presets": {
+        "today": "Today",
+        "last7": "Last 7 days",
+        "thisMonth": "This month",
+        "lastMonth": "Last month"
+      },
+      "summary": {
+        "revenue": "Total sales",
+        "orders": "Orders",
+        "items": "Items sold",
+        "average": "Average order",
+        "codCollected": "COD cash received",
+        "codPending": "COD cash due",
+        "cancelled": "Cancelled / returned: {count}",
+        "shipping": "Delivery charges: {amount}"
+      },
+      "byDay": "Daily sales",
+      "byProduct": "Sales by product",
+      "byCategory": "Sales by category",
+      "gst": "GST summary (by HSN)",
+      "gstHint": "Based on invoices issued in this period (excluding cancelled orders). Reconcile with your CA before filing.",
+      "gstReturned": "Includes {count} returned orders — issue credit notes for them.",
+      "stock": "Stock value (today)",
+      "stockHint": "Batches without a cost price are not included in the at-cost total.",
+      "day": "Date",
+      "orders": "Orders",
+      "revenue": "Sales",
+      "product": "Product",
+      "pack": "Pack",
+      "category": "Category",
+      "qty": "Qty",
+      "hsn": "HSN",
+      "rate": "GST rate",
+      "taxable": "Taxable",
+      "cgst": "CGST",
+      "sgst": "SGST",
+      "igst": "IGST",
+      "total": "Total",
+      "invoices": "Invoices: {count}",
+      "shippingNoGst": "Delivery charges (outside GST): {amount}",
+      "atCost": "At cost",
+      "atPrice": "At selling price",
+      "missingCost": "No cost price",
+      "none": "Nothing in this period.",
+      "download": "Download CSV",
+      "totalRow": "Total"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Delivery, shipping and Cash on Delivery rules",
+      "shipping": "Shipping",
+      "flatCharge": "Delivery charge (₹)*",
+      "freeShippingAbove": "Free delivery above (₹, blank = never)",
+      "deliverEverywhere": "Deliver all over India (off = only the PIN codes below)",
+      "cod": "Cash on Delivery (COD)",
+      "codEnabled": "COD is on",
+      "codMax": "Maximum COD order value (₹)*",
+      "save": "Save",
+      "saved": "Saved.",
+      "pincodes": "Delivery PIN codes",
+      "pincodesHint": "Each PIN code can have its own delivery charge (blank = the charge above) and COD rule.",
+      "pincode": "PIN code*",
+      "city": "City / village*",
+      "district": "District",
+      "charge": "Delivery charge (₹)",
+      "defaultCharge": "Default",
+      "codAllowed": "COD available",
+      "eta": "Delivery days*",
+      "active": "Active",
+      "addPincode": "Add PIN code",
+      "editPincode": "Edit PIN code",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "yes": "Yes",
+      "no": "No",
+      "status": "Status",
+      "errors": {
+        "invalid": "Please enter valid details.",
+        "invalidAmount": "Enter a valid amount.",
+        "invalidPincode": "Enter a valid 6-digit PIN code.",
+        "required": "This field is required.",
+        "invalidEta": "1 to 30 days."
+      }
     }
   },
   "products": {
@@ -761,5 +870,33 @@
     "cancelled": "This order was cancelled.",
     "returned": "This order was returned.",
     "help": "Need help? WhatsApp us"
+  },
+  "reviews": {
+    "title": "Customer reviews",
+    "none": "No reviews yet. Bought this product? Share your experience.",
+    "write": "Write a review",
+    "close": "Close",
+    "formTitle": "Share your experience",
+    "onlyBuyers": "Only customers whose order has been delivered can review — use the same mobile number.",
+    "name": "Your name*",
+    "mobile": "Mobile number used for the order*",
+    "rating": "Rating*",
+    "star": "{n} stars",
+    "comment": "Your experience (optional)",
+    "commentPlaceholder": "e.g. good germination, great harvest…",
+    "submit": "Submit review",
+    "sending": "Sending…",
+    "thanks": "Thank you! Your review will appear after it is checked.",
+    "verified": "Verified buyer",
+    "errors": {
+      "nameRequired": "Enter your name.",
+      "invalidMobile": "Enter a valid 10-digit mobile number.",
+      "ratingRequired": "Choose a star rating.",
+      "tooLong": "Too long.",
+      "invalid": "Please enter valid details.",
+      "notBuyer": "No delivered order of this product found for this number.",
+      "alreadyReviewed": "You have already reviewed this product.",
+      "tooMany": "Too many attempts. Please try again later."
+    }
   }
 }

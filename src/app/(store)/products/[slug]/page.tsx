@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { CircleCheck } from "lucide-react";
+import { BadgeCheck, CircleCheck } from "lucide-react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Breadcrumb } from "@/components/store/breadcrumb";
 import { Stars } from "@/components/store/stars";
 import { TrustStrip } from "@/components/store/trust-strip";
 import { storeConfig } from "@/config/store";
-import { getProductBySlug } from "@/lib/catalog/queries";
+import { getApprovedReviews, getProductBySlug } from "@/lib/catalog/queries";
 import { nextExpiry, sellableQuantity } from "@/lib/catalog/stock";
 import { localized, localizedList } from "@/lib/format";
 import { Gallery } from "./gallery";
 import { PurchasePanel, type PanelVariant } from "./purchase-panel";
+import { ReviewForm } from "./review-form";
 
 type Params = Promise<{ slug: string }>;
 
@@ -46,6 +47,8 @@ export default async function ProductPage({ params }: { params: Params }) {
   const tNav = await getTranslations("nav");
   const locale = await getLocale();
   const format = await getFormatter();
+  const tr = await getTranslations("reviews");
+  const reviews = await getApprovedReviews(product.id);
 
   const name = localized(product.nameHi, product.nameEn, locale);
   const subLabel = localized(product.subLabelHi, product.subLabelEn, locale);
@@ -195,6 +198,45 @@ export default async function ProductPage({ params }: { params: Params }) {
           </dl>
         </aside>
       </div>
+
+      <section id="reviews" className="mt-10 space-y-4" aria-labelledby="reviews-heading">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 id="reviews-heading" className="text-brand-800 text-xl font-semibold">
+            {tr("title")}
+          </h2>
+          {product.ratingCount > 0 && (
+            <span className="flex items-center gap-2 text-sm">
+              <Stars rating={rating} label={t("rating", { rating: rating.toFixed(1) })} />
+              <span className="font-semibold">{rating.toFixed(1)}</span>
+              <span className="text-muted-foreground">{t("reviews", { count: product.ratingCount })}</span>
+            </span>
+          )}
+        </div>
+        {reviews.length === 0 ? (
+          <p className="text-muted-foreground">{tr("none")}</p>
+        ) : (
+          <ul className="grid gap-3 md:grid-cols-2">
+            {reviews.map((r) => (
+              <li key={r.id} className="border-border rounded-card border bg-white p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <Stars rating={r.rating} label={t("rating", { rating: r.rating })} />
+                  <span className="text-muted-foreground text-xs">
+                    {format.dateTime(r.createdAt, { dateStyle: "medium" })}
+                  </span>
+                </div>
+                {r.comment && <p className="mt-2 whitespace-pre-line">{r.comment}</p>}
+                <p className="text-muted-foreground mt-2 flex items-center gap-1 text-sm">
+                  {r.name}
+                  <span className="text-brand-700 inline-flex items-center gap-0.5 text-xs font-medium">
+                    · <BadgeCheck className="size-3.5" aria-hidden /> {tr("verified")}
+                  </span>
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        <ReviewForm productId={product.id} />
+      </section>
 
       <div className="border-border bg-brand-50 rounded-card mt-10 border px-4 py-5">
         <TrustStrip />

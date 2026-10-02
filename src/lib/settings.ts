@@ -30,3 +30,14 @@ export async function getSetting<K extends SettingKey>(key: K): Promise<SettingV
   // Fall back to defaults if the stored value is malformed.
   return (parsed.success ? parsed.data : schemas[key].parse({})) as SettingValue<K>;
 }
+
+/** Validates and stores a setting; returns the saved value. */
+export async function saveSetting<K extends SettingKey>(key: K, value: unknown): Promise<SettingValue<K>> {
+  const parsed = schemas[key].parse(value) as SettingValue<K>;
+  await db.setting.upsert({
+    where: { key },
+    update: { value: parsed as object },
+    create: { key, value: parsed as object },
+  });
+  return parsed;
+}

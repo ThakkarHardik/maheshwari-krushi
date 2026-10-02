@@ -104,3 +104,12 @@ export function getProductBySlug(slug: string) {
 }
 
 export type ProductDetail = NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>;
+
+export function getApprovedReviews(productId: string, take = 20) {
+  return db.review.findMany({
+    where: { productId, status: "APPROVED" },
+    orderBy: { createdAt: "desc" },
+    take,
+    select: { id: true, name: true, rating: true, comment: true, createdAt: true, customerId: true },
+  });
+}

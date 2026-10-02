@@ -113,9 +113,14 @@ export default async function AdminDashboardPage({
         )}
       </div>
 
-      <Card>
-        <CardContent className="text-muted-foreground py-6">{t("dashboard.comingSoon")}</CardContent>
-      </Card>
+      {hasPermission(admin.role, "reports:view") && (
+        <Link
+          href="/admin/reports"
+          className="text-brand-700 inline-block text-sm font-semibold hover:underline"
+        >
+          {t("dashboard.viewReports")}
+        </Link>
+      )}
     </div>
   );
 }
