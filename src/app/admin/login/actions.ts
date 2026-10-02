@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { writeAudit } from "@/lib/audit";
@@ -8,6 +9,7 @@ import { afterFailedLogin, isLocked } from "@/lib/auth/lockout";
 import { DUMMY_HASH, verifyPassword } from "@/lib/auth/password";
 import { clearSessionCookie, createSessionCookie } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const loginSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email()),
@@ -15,9 +17,11 @@ const loginSchema = z.object({
   next: z.string().max(500).optional(),
 });
 
-export type LoginState = { error?: "invalid" | "locked" };
+export type LoginState = { error?: "invalid" | "locked" | "tooMany" };
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  // Per-IP limit on top of the per-account lockout, against password spraying.
+  if (!rateLimit(`login:${clientIp(await headers())}`, 20, 15 * 60_000)) return { error: "tooMany" };
   const parsed = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),

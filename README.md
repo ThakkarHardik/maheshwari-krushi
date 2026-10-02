@@ -2,7 +2,7 @@
 
 Hindi-first e-commerce website and admin panel for **Maheshwari Krishi Sewa Kendra**, 88, M.G. Road, Sailana, District Ratlam (MP).
 
-See [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md), [MASTER_PROMPT.md](MASTER_PROMPT.md) and [MARKET_RESEARCH.md](MARKET_RESEARCH.md).
+**Going live? Read [DEPLOYMENT.md](DEPLOYMENT.md).** Also see [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md), [MASTER_PROMPT.md](MASTER_PROMPT.md) and [MARKET_RESEARCH.md](MARKET_RESEARCH.md).
 
 ## Tech stack
 
@@ -38,6 +38,7 @@ Admin panel: http://localhost:3000/admin. Log in with `SEED_OWNER_EMAIL` and `SE
 | `npm run build` / `npm start` | Production build / serve |
 | `npm run lint` · `npm run typecheck` · `npm test` | ESLint · TypeScript · unit tests |
 | `npm run test:int` | Integration tests against a **local or dedicated test** database (they use up order/invoice numbers — never run on production; non-local URLs need `ALLOW_DB_TESTS=1`) |
+| `npm run test:e2e` | Builds the site and runs Playwright browser tests (desktop + phone) — same local/test-database rule as `test:int` |
 | `npm run db:migrate` | Create a new migration after changing `prisma/schema.prisma` |
 | `npm run db:deploy` | Apply migrations |
 | `npm run db:seed` | Seed data (safe to re-run) |
