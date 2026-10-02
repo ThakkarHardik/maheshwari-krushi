@@ -85,6 +85,24 @@ export async function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10">
+        <nav aria-label={t("policies")} className="mx-auto max-w-6xl px-4 pt-4">
+          <ul className="text-brand-100 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+            {(
+              [
+                ["/terms", "terms"],
+                ["/privacy", "privacy"],
+                ["/refund-policy", "refund"],
+                ["/shipping-policy", "shipping"],
+              ] as const
+            ).map(([href, key]) => (
+              <li key={href}>
+                <Link href={href} className="hover:text-white hover:underline">
+                  {t(key)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <p className="text-brand-100 mx-auto max-w-6xl px-4 py-4 text-center text-xs">
           © {year} {storeConfig.nameHi} ({storeConfig.name}). {t("rights")}
         </p>

@@ -48,3 +48,7 @@ next-env.d.ts
 
 # local image uploads (dev storage driver)
 /uploads/
+
+# playwright
+/test-results/
+/playwright-report/

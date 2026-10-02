@@ -49,7 +49,12 @@
     "contactUs": "Contact",
     "licence": "Licence No.",
     "gstin": "GSTIN",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "refund": "Returns & refunds",
+    "shipping": "Shipping",
+    "policies": "Policies"
   },
   "whatsapp": {
     "floatingLabel": "Ask on WhatsApp",
@@ -71,7 +76,8 @@
       "submitting": "Signing in…",
       "invalid": "Incorrect email or password.",
       "locked": "Too many failed attempts. Please try again in 15 minutes.",
-      "backToStore": "Back to website"
+      "backToStore": "Back to website",
+      "tooMany": "Too many sign-in attempts from this device. Please try again in 15 minutes."
     },
     "nav": {
       "dashboard": "Dashboard",
@@ -898,5 +904,11 @@
       "alreadyReviewed": "You have already reviewed this product.",
       "tooMany": "Too many attempts. Please try again later."
     }
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "Sorry, this page could not be loaded. Please try again. If the problem continues, call or WhatsApp us.",
+    "retry": "Try again",
+    "home": "Go to home page"
   }
 }

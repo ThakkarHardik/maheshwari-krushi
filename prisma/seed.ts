@@ -166,7 +166,10 @@ async function main() {
     await db.serviceablePincode.upsert({ where: { pincode: p.pincode }, update: p, create: p });
   }
 
-  for (const p of products) {
+  // Sample products with opening stock — skip in production: SEED_SAMPLE_PRODUCTS=false
+  const sampleProducts = process.env.SEED_SAMPLE_PRODUCTS === "false" ? [] : products;
+  if (!sampleProducts.length) console.log("• Sample products skipped (SEED_SAMPLE_PRODUCTS=false)");
+  for (const p of sampleProducts) {
     const category = await db.category.findUniqueOrThrow({ where: { slug: p.category } });
     const data = {
       nameHi: p.nameHi,

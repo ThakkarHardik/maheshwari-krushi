@@ -16,7 +16,9 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "test:int": "vitest run --config vitest.integration.config.mts"
+    "test:int": "vitest run --config vitest.integration.config.mts",
+    "test:e2e": "next build && playwright test",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.19.0",
     "@types/pg": "^8.23.1",
