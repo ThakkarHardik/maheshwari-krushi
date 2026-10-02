@@ -3,6 +3,7 @@ import type { Permission } from "@/lib/auth/roles";
 /** Admin sidebar. Later phases add Products, Orders, Inventory, Enquiries… */
 export const ADMIN_NAV = [
   { href: "/admin", key: "dashboard", permission: "dashboard:view", icon: "dashboard" },
+  { href: "/admin/orders", key: "orders", permission: "orders:view", icon: "orders" },
   { href: "/admin/products", key: "products", permission: "products:manage", icon: "products" },
   { href: "/admin/categories", key: "categories", permission: "products:manage", icon: "categories" },
   { href: "/admin/inventory", key: "inventory", permission: "inventory:manage", icon: "inventory" },

@@ -40,6 +40,11 @@ export async function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/track" className="text-brand-100 hover:text-white">
+                {tNav("track")}
+              </Link>
+            </li>
           </ul>
         </div>
 

@@ -100,6 +100,20 @@ enum ReviewStatus {
   HIDDEN
 }
 
+enum NotificationChannel {
+  SMS
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  /// Waiting to be sent by hand (no automatic provider configured)
+  QUEUED
+  SENT
+  FAILED
+  /// Sent by staff via WhatsApp from the admin panel
+  MANUAL_SENT
+}
+
 enum CouponType {
   PERCENT
   FLAT
@@ -429,6 +443,9 @@ model Order {
   courierName    String?
   trackingNumber String?
   codCollectedAt DateTime?
+  /// GST invoice number, e.g. "MKSC/2026-27/0001" — assigned when the order is packed.
+  invoiceNumber  String?   @unique
+  invoiceDate    DateTime?
   /// Unpaid online orders expire at this time and release reserved stock.
   expiresAt      DateTime?
   placedAt       DateTime  @default(now())
@@ -442,6 +459,7 @@ model Order {
   refunds        Refund[]
   statusHistory  OrderStatusHistory[]
   stockMovements StockMovement[]
+  notifications  Notification[]
 
   @@index([customerId])
   @@index([status, placedAt])
@@ -554,6 +572,30 @@ model WebhookEvent {
   payload     Json
   processedAt DateTime?
   createdAt   DateTime  @default(now())
+}
+
+/// Outgoing customer / owner messages (order updates). Kept as an outbox and audit trail.
+model Notification {
+  id        String              @id @default(cuid())
+  orderId   String?
+  channel   NotificationChannel
+  /// "CUSTOMER" or "OWNER"
+  audience  String
+  /// 10-digit mobile number
+  recipient String
+  /// Event name, e.g. "ORDER_PLACED", "ORDER_SHIPPED"
+  template  String
+  body      String
+  status    NotificationStatus  @default(QUEUED)
+  provider  String?
+  error     String?
+  sentAt    DateTime?
+  createdAt DateTime            @default(now())
+
+  order Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([status, createdAt])
 }
 
 // ───────────────────────────── Leads, Promotions, Delivery ─────────────────────────────

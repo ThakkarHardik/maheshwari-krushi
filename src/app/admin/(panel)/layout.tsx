@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Boxes, ExternalLink, Inbox, LayoutDashboard, LogOut, Package, Tags, Users } from "lucide-react";
+import {
+  Boxes,
+  ExternalLink,
+  Inbox,
+  LayoutDashboard,
+  LogOut,
+  Package,
+  ShoppingBag,
+  Tags,
+  Users,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Logo } from "@/components/store/logo";
 import { LanguageSwitcher } from "@/components/store/language-switcher";
@@ -15,6 +25,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const ICONS = {
   dashboard: LayoutDashboard,
+  orders: ShoppingBag,
   products: Package,
   categories: Tags,
   inventory: Boxes,
@@ -33,6 +44,7 @@ export default async function AdminPanelLayout({ children }: { children: React.R
       ? await db.enquiry.count({ where: { status: "NEW" } })
       : 0,
     inventory: stock ? stock.low + stock.out : 0,
+    orders: await db.order.count({ where: { status: "PENDING" } }),
   };
 
   return (
