@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { BadgeCheck, CircleCheck } from "lucide-react";
+import { BadgeCheck, CircleCheck, Store } from "lucide-react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import { Breadcrumb } from "@/components/store/breadcrumb";
 import { Stars } from "@/components/store/stars";
@@ -95,8 +95,10 @@ export default async function ProductPage({ params }: { params: Params }) {
     }),
   };
 
+  const storeName = locale === "en" ? storeConfig.name : storeConfig.nameHi;
   const details = [
     { label: t("category"), value: categoryName },
+    { label: t("seller"), value: storeName },
     product.manufacturer && { label: t("manufacturer"), value: product.manufacturer },
     product.licenceNo && { label: t("licence"), value: product.licenceNo },
     expiry && { label: t("expiry"), value: format.dateTime(expiry, { month: "short", year: "numeric" }) },
@@ -140,6 +142,9 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <span className="text-muted-foreground">{t("noReviews")}</span>
               )}
             </a>
+            <p className="text-muted-foreground mt-1 flex items-center justify-center gap-1.5 text-xs">
+              <Store className="size-3.5 shrink-0" aria-hidden /> {t("soldBy", { store: storeName })}
+            </p>
           </div>
 
           <PurchasePanel
@@ -224,14 +229,19 @@ export default async function ProductPage({ params }: { params: Params }) {
               key: "details",
               label: t("details"),
               content: (
-                <dl className="border-border divide-border mx-auto max-w-md divide-y rounded-lg border text-sm">
-                  {details.map((d) => (
-                    <div key={d.label} className="flex justify-between gap-4 px-4 py-3">
-                      <dt className="text-muted-foreground">{d.label}</dt>
-                      <dd className="text-right font-medium">{d.value}</dd>
-                    </div>
-                  ))}
-                </dl>
+                <>
+                  <dl className="border-border divide-border mx-auto max-w-md divide-y rounded-lg border text-sm">
+                    {details.map((d) => (
+                      <div key={d.label} className="flex justify-between gap-4 px-4 py-3">
+                        <dt className="text-muted-foreground">{d.label}</dt>
+                        <dd className="text-right font-medium">{d.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="text-muted-foreground mx-auto mt-4 max-w-md text-xs text-pretty">
+                    {t("sellerNote", { store: storeName })}
+                  </p>
+                </>
               ),
             },
           ]}

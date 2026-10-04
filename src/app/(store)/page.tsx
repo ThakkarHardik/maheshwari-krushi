@@ -1,19 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
   CircleCheck,
-  IndianRupee,
-  Leaf,
   MessageCircle,
   MousePointerClick,
   Phone,
   ReceiptText,
   ShoppingCart,
+  Store,
   Truck,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { HeroScene } from "@/components/store/hero-scene";
 import { ProductImage } from "@/components/store/product-image";
 import { Reveal } from "@/components/store/reveal";
 import { SectionHeading } from "@/components/store/section-heading";
@@ -39,12 +38,13 @@ export default async function HomePage() {
   const description = product ? localized(product.descriptionHi, product.descriptionEn, locale) : null;
   const benefits = product ? localizedList(product.benefitsHi, product.benefitsEn, locale).slice(0, 4) : [];
   const rating = product?.ratingAvg.toNumber() ?? 0;
+  const photo = product?.images[0];
 
   const highlights = [
-    { icon: BadgeCheck, label: t("highlights.licensed") },
-    { icon: ReceiptText, label: t("highlights.bill") },
-    { icon: IndianRupee, label: t("highlights.cod") },
-    { icon: Truck, label: t("highlights.local") },
+    t("highlights.licensed"),
+    t("highlights.bill"),
+    t("highlights.cod"),
+    t("highlights.local"),
   ];
   const steps = [
     { icon: MousePointerClick, key: "1" },
@@ -55,35 +55,36 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero — centred, with the animated field scene and the product */}
-      <section className="from-brand-800 via-brand-700 to-brand-600 relative overflow-hidden bg-gradient-to-b text-white">
-        <Leaf
-          className="animate-float text-brand-500/30 absolute top-16 left-[6%] hidden size-16 sm:block"
+      {/* Hero — real field photo, dark overlay, centred message */}
+      <section className="bg-brand-900 relative isolate overflow-hidden text-white">
+        <Image
+          src="/images/hero/wheat-field.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="animate-ken-burns -z-20 object-cover object-[center_65%]"
+        />
+        <div
+          className="from-brand-900/85 via-brand-900/55 to-brand-900 absolute inset-0 -z-10 bg-gradient-to-b"
           aria-hidden
         />
-        <Leaf
-          className="animate-float-slow text-brand-500/30 absolute top-24 right-[7%] hidden size-20 rotate-90 sm:block"
-          aria-hidden
-        />
-        <div className="relative mx-auto max-w-6xl px-4 pt-10 text-center sm:pt-14">
-          <p className="animate-fade-up mx-auto inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium ring-1 ring-white/20">
-            <Leaf className="size-4" aria-hidden /> {t("heroBadge")}
+        <div className="mx-auto max-w-4xl px-4 pt-14 pb-36 text-center sm:pt-20 sm:pb-44">
+          <p className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+            <BadgeCheck className="text-accent-400 size-4" aria-hidden /> {t("heroBadge")}
           </p>
-          <h1 className="animate-fade-up mx-auto mt-4 max-w-3xl text-4xl leading-tight font-bold text-balance [animation-delay:80ms] sm:text-5xl">
+          <h1 className="animate-fade-up mx-auto mt-5 max-w-3xl text-4xl leading-tight font-bold tracking-tight text-balance [animation-delay:80ms] sm:text-6xl">
             {t("heroTitle")}
           </h1>
-          <p className="animate-fade-up text-accent-300 mt-3 text-lg font-semibold [animation-delay:160ms] sm:text-xl">
-            {t("heroTagline")}
-          </p>
-          <p className="animate-fade-up text-brand-100 mx-auto mt-3 max-w-xl text-pretty [animation-delay:220ms] sm:text-lg">
+          <p className="animate-fade-up text-brand-100 mx-auto mt-5 max-w-2xl text-lg text-pretty [animation-delay:160ms] sm:text-xl">
             {t("heroText")}
           </p>
-          <div className="animate-fade-up mt-7 flex flex-wrap justify-center gap-3 [animation-delay:300ms]">
+          <div className="animate-fade-up mt-8 flex flex-wrap justify-center gap-3 [animation-delay:240ms]">
             <Button
               asChild
               variant="accent"
               size="lg"
-              className="shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
+              className="h-12 px-7 text-base shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
             >
               <a href={product ? "#product" : "/products"}>
                 {t("shopNow")} <ArrowRight />
@@ -93,111 +94,113 @@ export default async function HomePage() {
               asChild
               size="lg"
               variant="outline"
-              className="hover:text-brand-800 border-white bg-transparent text-white transition hover:-translate-y-0.5 hover:bg-white"
+              className="hover:text-brand-800 h-12 border-white/70 bg-white/5 px-7 text-base text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white"
             >
               <a href={whatsappAdvice} target="_blank" rel="noopener noreferrer">
                 <MessageCircle /> {t("askAdvice")}
               </a>
             </Button>
           </div>
-          <div className="animate-fade-up mt-8 [animation-delay:380ms]">
-            <HeroScene imageUrl={product?.images[0]?.url ?? null} alt={name || t("heroTitle")} />
-          </div>
+          <ul className="animate-fade-up text-brand-100 mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm [animation-delay:320ms] sm:text-base">
+            {highlights.map((label) => (
+              <li key={label} className="inline-flex items-center gap-1.5">
+                <CircleCheck className="text-accent-400 size-4" aria-hidden /> {label}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* Highlights bar overlapping the hero edge */}
-      <div className="relative z-10 mx-auto -mt-8 max-w-5xl px-4">
-        <ul className="rounded-card grid grid-cols-2 gap-x-4 gap-y-3 bg-white px-4 py-4 shadow-lg ring-1 ring-black/5 sm:grid-cols-4 sm:px-6">
-          {highlights.map(({ icon: Icon, label }) => (
-            <li
-              key={label}
-              className="flex flex-col items-center gap-1 text-center text-sm font-medium sm:flex-row sm:justify-center sm:gap-2"
-            >
-              <span className="bg-brand-50 text-brand-700 flex size-9 shrink-0 items-center justify-center rounded-full">
-                <Icon className="size-5" aria-hidden />
-              </span>
-              {label}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* The product — buy straight from the home page */}
+      {/* The product — sits on the hero edge, buy straight from here */}
       {product && (
-        <section id="product" className="mx-auto max-w-6xl scroll-mt-24 px-4 pt-14">
-          <Reveal>
-            <SectionHeading title={t("spotlightTitle")} text={t("spotlightText")} />
-            <div className="rounded-card mt-8 grid items-center gap-8 bg-white p-5 shadow-sm ring-1 ring-black/5 sm:p-8 md:grid-cols-2">
-              <div className="text-center">
-                <ProductImage
-                  src={product.images[0]?.url}
-                  alt={name}
-                  sizes="(min-width: 768px) 420px, 100vw"
-                  placeholderLabel={tp("noImage")}
-                  className="rounded-card mx-auto max-w-56 sm:max-w-xs"
+        <section id="product" className="relative z-10 mx-auto -mt-24 max-w-5xl scroll-mt-24 px-4 sm:-mt-28">
+          <div className="animate-fade-up overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 [animation-delay:400ms] md:grid md:grid-cols-[5fr_6fr]">
+            <div className="group bg-brand-50 relative aspect-[4/5] max-h-[28rem] w-full overflow-hidden md:aspect-auto md:max-h-none">
+              {photo ? (
+                <Image
+                  src={photo.url}
+                  alt={photo.alt ?? name}
+                  fill
+                  sizes="(min-width: 768px) 440px, 100vw"
+                  className="object-cover transition duration-700 group-hover:scale-105"
                 />
-                <h3 className="text-brand-800 mt-5 text-2xl font-bold">
-                  {name}{" "}
-                  {subLabel && <span className="text-muted-foreground text-lg font-medium">{subLabel}</span>}
-                </h3>
-                {product.ratingCount > 0 && (
-                  <p className="mt-2 flex items-center justify-center gap-2 text-sm">
-                    <Stars rating={rating} label={tp("rating", { rating: rating.toFixed(1) })} />
-                    <span className="text-muted-foreground">
-                      {tp("reviews", { count: product.ratingCount })}
-                    </span>
-                  </p>
-                )}
-                {description && (
-                  <p className="text-muted-foreground mx-auto mt-3 max-w-md text-pretty">
-                    {summarize(description)}
-                  </p>
-                )}
-                {benefits.length > 0 && (
-                  <ul className="mt-4 flex flex-wrap justify-center gap-2">
-                    {benefits.map((b) => (
-                      <li
-                        key={b}
-                        className="bg-brand-50 text-brand-800 inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm"
-                      >
-                        <CircleCheck className="text-brand-600 size-4" aria-hidden /> {b}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="md:border-border md:border-l md:pl-8">
+              ) : (
+                <ProductImage
+                  alt={name}
+                  sizes="440px"
+                  placeholderLabel={tp("noImage")}
+                  className="size-full"
+                />
+              )}
+            </div>
+            <div className="p-6 text-center sm:p-8">
+              <h2 className="bg-brand-50 text-brand-700 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase">
+                <span className="bg-brand-600 size-2 animate-pulse rounded-full" aria-hidden />
+                {t("spotlightTitle")}
+              </h2>
+              <h3 className="text-brand-800 mt-3 text-2xl font-bold sm:text-3xl">
+                {name}{" "}
+                {subLabel && <span className="text-muted-foreground text-base font-medium">{subLabel}</span>}
+              </h3>
+              {product.ratingCount > 0 && (
+                <p className="mt-2 flex items-center justify-center gap-2 text-sm">
+                  <Stars rating={rating} label={tp("rating", { rating: rating.toFixed(1) })} />
+                  <span className="text-muted-foreground">
+                    {tp("reviews", { count: product.ratingCount })}
+                  </span>
+                </p>
+              )}
+              <p className="text-muted-foreground mt-2 inline-flex items-center gap-1.5 text-xs">
+                <Store className="size-3.5 shrink-0" aria-hidden /> {t("spotlightText")}
+              </p>
+              {description && (
+                <p className="text-muted-foreground mx-auto mt-3 max-w-md text-sm text-pretty">
+                  {summarize(description)}
+                </p>
+              )}
+              {benefits.length > 0 && (
+                <ul className="mt-4 flex flex-wrap justify-center gap-2">
+                  {benefits.map((b) => (
+                    <li
+                      key={b}
+                      className="bg-brand-50 text-brand-800 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium"
+                    >
+                      <CircleCheck className="text-brand-600 size-3.5" aria-hidden /> {b}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="border-border mt-6 border-t pt-6">
                 <PurchasePanel
                   productId={product.id}
                   productName={name}
                   variants={toPanelVariants(product.variants)}
                   whatsapp={storeConfig.whatsapp}
                 />
-                <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-semibold">
+              </div>
+              <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-semibold">
+                <Link
+                  href={`/products/${product.slug}`}
+                  className="text-brand-700 inline-flex items-center gap-1 hover:underline"
+                >
+                  {t("fullDetails")} <ArrowRight className="size-4" aria-hidden />
+                </Link>
+                {otherProducts > 0 && (
                   <Link
-                    href={`/products/${product.slug}`}
+                    href="/products"
                     className="text-brand-700 inline-flex items-center gap-1 hover:underline"
                   >
-                    {t("fullDetails")} <ArrowRight className="size-4" aria-hidden />
+                    {t("moreProducts")} ({otherProducts}) <ArrowRight className="size-4" aria-hidden />
                   </Link>
-                  {otherProducts > 0 && (
-                    <Link
-                      href="/products"
-                      className="text-brand-700 inline-flex items-center gap-1 hover:underline"
-                    >
-                      {t("moreProducts")} ({otherProducts}) <ArrowRight className="size-4" aria-hidden />
-                    </Link>
-                  )}
-                </div>
+                )}
               </div>
             </div>
-          </Reveal>
+          </div>
         </section>
       )}
 
       {/* How to order — one compact row */}
-      <Reveal as="section" className="mx-auto max-w-6xl px-4 pt-14">
+      <Reveal as="section" className="mx-auto max-w-6xl px-4 pt-16">
         <SectionHeading title={t("stepsTitle")} text={t("stepsText")} />
         <ol className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {steps.map(({ icon: Icon, key }, i) => (
@@ -221,13 +224,9 @@ export default async function HomePage() {
       {/* Advice banner */}
       <Reveal as="section" className="mx-auto max-w-6xl px-4 pt-14">
         <div className="rounded-card from-brand-800 to-brand-600 relative overflow-hidden bg-gradient-to-r px-6 py-10 text-center text-white shadow-lg">
-          <MessageCircle
-            className="animate-float-slow absolute -bottom-6 -left-6 size-32 text-white/10"
-            aria-hidden
-          />
-          <h2 className="relative text-2xl font-bold text-balance sm:text-3xl">{t("ctaTitle")}</h2>
-          <p className="text-brand-100 relative mx-auto mt-2 max-w-xl text-pretty">{t("ctaText")}</p>
-          <div className="relative mt-6 flex flex-wrap justify-center gap-3">
+          <h2 className="text-2xl font-bold text-balance sm:text-3xl">{t("ctaTitle")}</h2>
+          <p className="text-brand-100 mx-auto mt-2 max-w-xl text-pretty">{t("ctaText")}</p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" variant="accent" className="transition hover:-translate-y-0.5">
               <a href={`tel:+91${storeConfig.phone}`}>
                 <Phone /> {t("ctaCall")}
@@ -243,7 +242,7 @@ export default async function HomePage() {
               </a>
             </Button>
           </div>
-          <p className="relative mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
+          <p className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
             <Link href="/contact#faq" className="text-brand-100 hover:text-white hover:underline">
               {t("helpLinks")} →
             </Link>

@@ -21,8 +21,8 @@
     "shopNow": "Shop now",
     "featuredTitle": "Our featured products",
     "viewAll": "View all products",
-    "heroBadge": "Sailana's trusted krishi sewa kendra",
-    "heroText": "Seeds, plant tonics and fodder seeds — with the right advice, at the right price, delivered to your village.",
+    "heroBadge": "Licensed agri-input store · Sailana, Ratlam",
+    "heroText": "Farm inputs from trusted brands — with the right advice, at the right price, delivered to your village.",
     "askAdvice": "Ask for advice on WhatsApp",
     "highlights": {
       "licensed": "Licensed seller",
@@ -46,7 +46,7 @@
     "steps": {
       "1": {
         "title": "Choose a product",
-        "text": "Browse by category or crop, then pick the pack size and quantity."
+        "text": "Pick the pack size and quantity — the price shows instantly."
       },
       "2": {
         "title": "Add to cart",
@@ -88,8 +88,8 @@
     "ctaCall": "Call now",
     "ctaWhatsapp": "Ask on WhatsApp",
     "ctaMessage": "Hello, I need advice for my crop.",
-    "spotlightTitle": "Our product",
-    "spotlightText": "Choose the pack size you need — all prices include tax",
+    "spotlightTitle": "Available now",
+    "spotlightText": "We are a licensed seller of this product — choose a pack size; all prices include tax.",
     "fullDetails": "Full details, how to use and reviews",
     "moreProducts": "See more products",
     "helpLinks": "Questions? Read the FAQ"
@@ -104,7 +104,7 @@
     "title": "About us",
     "badge": "Sailana, District Ratlam",
     "heroTitle": "Serving farmers, with trust",
-    "heroText": "Maheshwari Krishi Sewa Kendra is a licensed agri-input store on M.G. Road, Sailana. We supply farmers in the area with quality seeds, plant tonics, fodder seeds and other farm inputs at the right price — along with the right advice.",
+    "heroText": "A licensed agri-input store on M.G. Road, Sailana. We supply seeds, plant tonics and other farm inputs from trusted brands at the right price — along with the right advice.",
     "storyTitle": "What we believe",
     "story": [
       "A Malwa farmer's hard work pays off fully only when the seed is good, the input is right, and it is used at the right time in the right amount. So we don't just sell products — we understand each farmer's crop, soil and problem, and advise accordingly.",
@@ -174,7 +174,16 @@
       "field": "Green fields of Malwa",
       "shop": "Maheshwari Krishi Sewa Kendra shop",
       "advice": "Advising a farmer"
-    }
+    },
+    "heroCall": "Call for advice",
+    "heroVisit": "Directions to the shop",
+    "facts": {
+      "licence": "Licence no.",
+      "gstin": "GSTIN",
+      "shop": "Shop",
+      "phone": "Phone / WhatsApp"
+    },
+    "shopShort": "M.G. Road, Sailana"
   },
   "contact": {
     "title": "Contact us",
@@ -857,7 +866,10 @@
     "viewCart": "View cart",
     "limited": "Only {count} in stock — {count} kept in your cart.",
     "unavailable": "This product is not available right now.",
-    "adding": "Adding…"
+    "adding": "Adding…",
+    "soldBy": "Sold by {store}",
+    "sellerNote": "This product belongs to its manufacturer. {store} is only a licensed seller — product information is as provided by the manufacturer.",
+    "seller": "Seller"
   },
   "enquiry": {
     "title": "Enquiry / WhatsApp",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   BadgeCheck,
@@ -12,10 +13,10 @@ import {
   ReceiptText,
   ShieldCheck,
   ShoppingBag,
+  Store,
   Users,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
-import { AboutPhoto } from "@/components/store/about-photo";
 import { CategoryIcon } from "@/components/store/category-icon";
 import { Reveal } from "@/components/store/reveal";
 import { SectionHeading } from "@/components/store/section-heading";
@@ -45,6 +46,12 @@ export default async function AboutPage() {
     { key: "respect", icon: Users },
     { key: "after", icon: HandHeart },
   ] as const;
+  const facts = [
+    { key: "licence", icon: BadgeCheck, value: storeConfig.licenceNo },
+    { key: "gstin", icon: ReceiptText, value: storeConfig.gstin },
+    { key: "shop", icon: Store, value: t("shopShort") },
+    { key: "phone", icon: Phone, value: `+91 ${storeConfig.phone}` },
+  ] as const;
   const support = [
     { key: "before", icon: Lightbulb },
     { key: "during", icon: ShoppingBag },
@@ -53,32 +60,89 @@ export default async function AboutPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-brand-50 border-border border-b">
-        <div className="mx-auto max-w-4xl px-4 pt-12 pb-10 text-center sm:pt-16">
-          <p className="text-brand-700 animate-fade-up inline-flex items-center gap-1 text-sm font-semibold">
-            <MapPin className="size-4" aria-hidden /> {t("badge")}
+      {/* Hero — real photo, dark overlay, centred message */}
+      <section className="bg-brand-900 relative isolate overflow-hidden text-white">
+        <Image
+          src="/images/about/farmers-field.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="animate-ken-burns -z-20 object-cover object-[center_40%]"
+        />
+        <div
+          className="from-brand-900/85 via-brand-900/70 to-brand-900/95 absolute inset-0 -z-10 bg-gradient-to-b"
+          aria-hidden
+        />
+        <div className="mx-auto max-w-3xl px-4 pt-14 pb-32 text-center sm:pt-20 sm:pb-36">
+          <p className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+            <MapPin className="text-accent-400 size-4" aria-hidden /> {t("badge")}
           </p>
-          <h1 className="text-brand-800 animate-fade-up mt-2 text-3xl leading-tight font-bold text-balance [animation-delay:80ms] sm:text-5xl">
+          <h1 className="animate-fade-up mt-5 text-4xl leading-tight font-bold tracking-tight text-balance [animation-delay:80ms] sm:text-5xl">
             {t("heroTitle")}
           </h1>
-          <p className="animate-fade-up mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-pretty [animation-delay:160ms]">
+          <p className="animate-fade-up text-brand-100 mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty [animation-delay:160ms]">
             {t("heroText")}
           </p>
-          <p className="bg-accent-300/70 text-brand-900 animate-fade-up mt-6 inline-block rounded-full px-5 py-2 font-semibold [animation-delay:240ms]">
+          <p className="animate-fade-up text-accent-300 mt-5 font-semibold [animation-delay:220ms]">
             {t("promise")}
           </p>
-          <div className="animate-scale-in mx-auto mt-8 max-w-xl [animation-delay:300ms]">
-            <AboutPhoto name="field" alt={t("photoAlt.field")} />
+          <div className="animate-fade-up mt-8 flex flex-wrap justify-center gap-3 [animation-delay:280ms]">
+            <Button
+              asChild
+              variant="accent"
+              size="lg"
+              className="h-12 px-6 text-base shadow-lg transition hover:-translate-y-0.5"
+            >
+              <a href={`tel:+91${storeConfig.phone}`}>
+                <Phone /> {t("heroCall")}
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="hover:text-brand-800 h-12 border-white/70 bg-white/5 px-6 text-base text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white"
+            >
+              <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">
+                <MapPin /> {t("heroVisit")}
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
+      {/* Key facts on the hero edge */}
+      <div className="relative z-10 mx-auto -mt-20 max-w-5xl px-4">
+        <dl className="animate-fade-up bg-border grid grid-cols-2 gap-px overflow-hidden rounded-2xl text-center shadow-xl ring-1 ring-black/5 [animation-delay:360ms] md:grid-cols-4">
+          {facts.map(({ key, icon: Icon, value }) => (
+            <div
+              key={key}
+              className="flex flex-col items-center gap-1 bg-white p-4 sm:p-5"
+            >
+              <Icon className="text-brand-600 size-6" aria-hidden />
+              <dt className="text-muted-foreground mt-1 text-xs font-medium tracking-wide uppercase">
+                {t(`facts.${key}`)}
+              </dt>
+              <dd className="text-brand-800 text-sm font-bold break-all sm:text-base">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
       {/* Story */}
-      <Reveal as="section" className="mx-auto max-w-5xl px-4 py-14">
+      <Reveal as="section" className="mx-auto max-w-5xl px-4 py-16">
         <SectionHeading title={t("storyTitle")} />
         <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
-          <AboutPhoto name="shop" alt={t("photoAlt.shop")} />
+          <div className="rounded-card relative aspect-[3/2] overflow-hidden shadow-md">
+            <Image
+              src="/images/about/farmer-at-work.jpg"
+              alt={t("photoAlt.advice")}
+              fill
+              sizes="(min-width: 768px) 480px, 100vw"
+              className="object-cover transition duration-700 hover:scale-105"
+            />
+          </div>
           <div className="space-y-4 text-center text-pretty">
             {story.map((p) => (
               <p key={p.slice(0, 24)} className="leading-relaxed">
@@ -172,32 +236,14 @@ export default async function AboutPage() {
         </Reveal>
       )}
 
-      {/* Trust + visit */}
-      <section className="mx-auto grid max-w-5xl gap-6 px-4 py-14 md:grid-cols-2">
-        <Reveal className="rounded-card flex flex-col items-center bg-white p-6 text-center shadow-sm ring-1 ring-black/5">
-          <BadgeCheck className="text-brand-700 size-10" aria-hidden />
-          <h2 className="text-brand-800 mt-2 text-xl font-semibold">{t("trustTitle")}</h2>
-          <dl className="mt-4 w-full space-y-3 text-sm">
-            <div>
-              <dt className="text-muted-foreground">{t("licence")}</dt>
-              <dd className="text-base font-semibold">{storeConfig.licenceNo}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{t("gstin")}</dt>
-              <dd className="text-base font-semibold">{storeConfig.gstin}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{t("address")}</dt>
-              <dd className="font-semibold">{storeConfig.addressHi}</dd>
-            </div>
-          </dl>
-        </Reveal>
-        <Reveal
-          delay={100}
-          className="rounded-card from-brand-700 to-brand-600 flex flex-col items-center justify-center bg-gradient-to-br p-6 text-center text-white shadow-md"
-        >
+      {/* Visit */}
+      <section className="mx-auto max-w-3xl px-4 py-14">
+        <Reveal className="rounded-card from-brand-700 to-brand-600 flex flex-col items-center justify-center bg-gradient-to-br p-6 text-center text-white shadow-md">
           <h2 className="text-xl font-semibold">{t("visitTitle")}</h2>
           <p className="text-brand-100 mt-2">{t("visitText")}</p>
+          <p className="mt-3 inline-flex items-center gap-1.5 text-sm">
+            <MapPin className="text-accent-300 size-4 shrink-0" aria-hidden /> {storeConfig.addressHi}
+          </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button asChild variant="accent" className="transition hover:-translate-y-0.5">
               <a href={`tel:+91${storeConfig.phone}`}>

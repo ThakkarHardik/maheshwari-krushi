@@ -9,6 +9,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { storeConfig } from "../src/config/store";
 import { PrismaClient, type Season, type Unit } from "../src/generated/prisma/client";
+import { superTatkalPower } from "./products";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
 
@@ -51,22 +52,19 @@ const products: {
   hsnCode: string;
   gstRate: string;
   crops: string[];
+  /** Full bilingual details and photo, when known. */
+  details?: typeof superTatkalPower;
   variant: { sku: string; packSize: string; unit: Unit; label: string; mrp: string; price: string };
 }[] = [
   {
-    slug: "tarvarth-power-plant-tonic",
+    slug: superTatkalPower.slug,
     category: "plant-tonic",
-    nameHi: "तार्वर्त पावर",
-    nameEn: "Tarvarth Power",
-    subLabelHi: "(प्लांट टॉनिक)",
-    descriptionHi:
-      "तार्वर्त पावर एक शक्तिशाली प्लांट टॉनिक है जो पौधों की वृद्धि, फूल और फल बनने की प्रक्रिया को तेजी से बढ़ाता है और उपज में वृद्धि करता है। यह सभी प्रकार की फसलों के लिए उपयोगी है।",
-    benefitsHi: [
-      "तेज असर और बेहतर परिणाम",
-      "सभी फसलों के लिए उपयोगी",
-      "पौधों की रोग प्रतिरोधक क्षमता बढ़ाए",
-      "उपज में वृद्धि",
-    ],
+    nameHi: superTatkalPower.nameHi,
+    nameEn: superTatkalPower.nameEn,
+    subLabelHi: superTatkalPower.subLabelHi,
+    descriptionHi: superTatkalPower.descriptionHi,
+    benefitsHi: superTatkalPower.benefitsHi,
+    details: superTatkalPower,
     hsnCode: "3101",
     gstRate: "5",
     crops: ["soybean", "cotton", "wheat", "gram", "onion", "garlic"],
@@ -180,14 +178,27 @@ async function main() {
       hsnCode: p.hsnCode,
       gstRate: p.gstRate,
       licenceNo: storeConfig.licenceNo,
-      isFeatured: true,
+      isFeatured: Boolean(p.details),
       categoryId: category.id,
+      ...(p.details && {
+        subLabelEn: p.details.subLabelEn,
+        descriptionEn: p.details.descriptionEn,
+        benefitsEn: p.details.benefitsEn,
+        usageHi: p.details.usageHi,
+        usageEn: p.details.usageEn,
+        safetyHi: p.details.safetyHi,
+      }),
     };
     const product = await db.product.upsert({
       where: { slug: p.slug },
       update: data,
       create: { slug: p.slug, ...data },
     });
+
+    const image = p.details?.image;
+    if (image && !(await db.productImage.findFirst({ where: { productId: product.id, url: image.url } }))) {
+      await db.productImage.create({ data: { productId: product.id, ...image } });
+    }
 
     for (const cropSlug of p.crops) {
       const crop = await db.crop.findUniqueOrThrow({ where: { slug: cropSlug } });
