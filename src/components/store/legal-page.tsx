@@ -15,8 +15,9 @@ export async function LegalPage({ docKey, vars = {} }: { docKey: LegalKey; vars?
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-brand-800 text-3xl font-bold">{doc.title}</h1>
-      <p className="text-muted-foreground mt-1 text-sm">
+      <h1 className="text-brand-800 text-center text-3xl font-bold">{doc.title}</h1>
+      <span className="bg-accent-400 mx-auto mt-3 block h-1 w-16 rounded-full" aria-hidden />
+      <p className="text-muted-foreground mt-3 text-center text-sm">
         {locale === "en" ? "Last updated" : "अंतिम अपडेट"}:{" "}
         {format.dateTime(new Date(`${LAST_UPDATED}T00:00:00+05:30`), { dateStyle: "long" })}
       </p>

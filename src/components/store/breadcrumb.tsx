@@ -5,7 +5,7 @@ export async function Breadcrumb({ items }: { items: { label: string; href?: str
   const t = await getTranslations("products");
   return (
     <nav aria-label={t("breadcrumb")} className="text-muted-foreground text-sm">
-      <ol className="flex flex-wrap items-center gap-1">
+      <ol className="flex flex-wrap items-center justify-center gap-1">
         {items.map((item, i) => (
           <li key={i} className="flex items-center gap-1">
             {i > 0 && <span aria-hidden>›</span>}

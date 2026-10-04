@@ -7,17 +7,11 @@ import { useTranslations } from "next-intl";
 import { EnquiryDialog } from "@/components/store/enquiry-dialog";
 import { Button } from "@/components/ui/button";
 import { addToCartAction } from "@/lib/cart/actions";
+import type { PanelVariant } from "@/lib/catalog/panel";
 import { discountPercent, formatINR } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export type PanelVariant = {
-  id: string;
-  label: string;
-  price: string;
-  mrp: string;
-  stock: number;
-  lowStock: boolean;
-};
+export type { PanelVariant } from "@/lib/catalog/panel";
 
 const MAX_QTY = 99;
 // Lets long labels like "Enquiry / WhatsApp" wrap instead of overflowing narrow columns.
@@ -69,36 +63,38 @@ export function PurchasePanel({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 text-center">
       <div>
-        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="text-brand-800 text-3xl font-bold">{formatINR(variant.price)}</span>
+        <p className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
+          <span key={variant.id} className="text-brand-800 animate-scale-in text-4xl font-bold">
+            {formatINR(variant.price)}
+          </span>
           {off > 0 && (
             <>
               <span className="text-muted-foreground line-through">
                 {t("mrp")} {formatINR(variant.mrp)}
               </span>
-              <span className="bg-brand-50 text-brand-700 rounded px-2 py-0.5 text-sm font-semibold">
+              <span className="bg-accent-400 text-brand-900 rounded-full px-2.5 py-0.5 text-sm font-bold">
                 {t("off", { percent: off })}
               </span>
             </>
           )}
         </p>
-        <p className="text-muted-foreground text-sm">{t("inclTax")}</p>
+        <p className="text-muted-foreground mt-1 text-sm">{t("inclTax")}</p>
       </div>
 
-      {variants.length > 1 && (
+      {variants.length > 1 ? (
         <fieldset>
-          <legend className="mb-2 text-sm font-semibold">{t("packSize")}</legend>
-          <div className="flex flex-wrap gap-2">
+          <legend className="mx-auto mb-2 text-sm font-semibold">{t("packSize")}</legend>
+          <div className="flex flex-wrap justify-center gap-2">
             {variants.map((v, i) => (
               <label
                 key={v.id}
                 className={cn(
-                  "cursor-pointer rounded-md border px-4 py-2 text-sm font-medium has-[:focus-visible]:outline-2",
+                  "flex min-w-24 cursor-pointer flex-col items-center rounded-xl border-2 px-4 py-2 transition duration-200 has-[:focus-visible]:outline-2",
                   i === selected
-                    ? "border-brand-700 bg-brand-50 text-brand-800"
-                    : "border-border hover:bg-brand-50",
+                    ? "border-brand-700 bg-brand-50 text-brand-800 shadow-sm"
+                    : "border-border hover:border-brand-200 hover:bg-brand-50/60",
                   v.stock === 0 && "opacity-60",
                 )}
               >
@@ -110,55 +106,61 @@ export function PurchasePanel({
                   onChange={() => choose(i)}
                   className="sr-only"
                 />
-                {v.label}
+                <span className="font-semibold">{v.label}</span>
+                <span className="text-muted-foreground text-xs">{formatINR(v.price)}</span>
               </label>
             ))}
           </div>
         </fieldset>
-      )}
-      {variants.length === 1 && (
+      ) : (
         <p className="text-sm">
           <span className="font-semibold">{t("packSize")}:</span> {variant.label}
         </p>
       )}
 
-      <p className={cn("text-sm font-semibold", inStock ? "text-brand-700" : "text-danger")}>
-        {!inStock
-          ? t("outOfStock")
-          : variant.lowStock
-            ? t("lowStock", { count: variant.stock })
-            : t("inStock")}
-      </p>
-
-      <div className="flex items-center gap-3">
-        <span className="text-sm font-semibold">{t("quantity")}:</span>
-        <div className="border-border inline-flex items-center rounded-md border">
-          <button
-            type="button"
-            onClick={() => setQty((q) => Math.max(1, q - 1))}
-            disabled={qty <= 1}
-            aria-label={t("decrease")}
-            className="flex size-11 items-center justify-center disabled:opacity-40"
-          >
-            <Minus className="size-4" />
-          </button>
-          <output aria-live="polite" className="w-10 text-center font-semibold">
-            {qty}
-          </output>
-          <button
-            type="button"
-            onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
-            disabled={qty >= maxQty || !inStock}
-            aria-label={t("increase")}
-            className="flex size-11 items-center justify-center disabled:opacity-40"
-          >
-            <Plus className="size-4" />
-          </button>
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-semibold">{t("quantity")}:</span>
+          <div className="border-border inline-flex items-center rounded-full border bg-white">
+            <button
+              type="button"
+              onClick={() => setQty((q) => Math.max(1, q - 1))}
+              disabled={qty <= 1}
+              aria-label={t("decrease")}
+              className="hover:bg-brand-50 flex size-11 items-center justify-center rounded-full transition disabled:opacity-40"
+            >
+              <Minus className="size-4" />
+            </button>
+            <output aria-live="polite" className="w-10 text-center text-lg font-semibold">
+              {qty}
+            </output>
+            <button
+              type="button"
+              onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
+              disabled={qty >= maxQty || !inStock}
+              aria-label={t("increase")}
+              className="hover:bg-brand-50 flex size-11 items-center justify-center rounded-full transition disabled:opacity-40"
+            >
+              <Plus className="size-4" />
+            </button>
+          </div>
         </div>
+        <p className={cn("text-sm font-semibold", inStock ? "text-brand-700" : "text-danger")}>
+          {!inStock
+            ? t("outOfStock")
+            : variant.lowStock
+              ? t("lowStock", { count: variant.stock })
+              : `✓ ${t("inStock")}`}
+        </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <Button size="lg" disabled={!inStock || pending} onClick={() => add(true)} className={ACTION_BUTTON}>
+        <Button
+          size="lg"
+          disabled={!inStock || pending}
+          onClick={() => add(true)}
+          className={cn(ACTION_BUTTON, "transition hover:-translate-y-0.5 hover:shadow-lg")}
+        >
           <Zap /> {t("buyNow")}
         </Button>
         <Button
@@ -166,7 +168,7 @@ export function PurchasePanel({
           variant="secondary"
           disabled={!inStock || pending}
           onClick={() => add(false)}
-          className={ACTION_BUTTON}
+          className={cn(ACTION_BUTTON, "transition hover:-translate-y-0.5 hover:shadow-lg")}
         >
           <ShoppingCart /> {pending ? t("adding") : t("addToCart")}
         </Button>
@@ -177,7 +179,7 @@ export function PurchasePanel({
           getDefaultMessage={() =>
             t("whatsappMessage", { product: productName, variant: variant.label, qty })
           }
-          triggerClassName={ACTION_BUTTON}
+          triggerClassName={cn(ACTION_BUTTON, "transition hover:-translate-y-0.5 hover:shadow-lg")}
           label={t("enquiry")}
         />
       </div>
@@ -185,7 +187,7 @@ export function PurchasePanel({
         <p
           role={feedback.kind === "error" ? "alert" : "status"}
           className={cn(
-            "flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md px-4 py-3 text-sm font-medium",
+            "animate-scale-in flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-md px-4 py-3 text-sm font-medium",
             feedback.kind === "error" ? "text-danger bg-red-50" : "bg-brand-50 text-brand-800",
           )}
         >

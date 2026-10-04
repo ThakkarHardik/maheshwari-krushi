@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SectionHeading } from "@/components/store/section-heading";
 import { getTranslations } from "next-intl/server";
 import { storeConfig } from "@/config/store";
 import { TrackForm } from "./track-form";
@@ -13,8 +14,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Promis
   const t = await getTranslations("track");
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-brand-800 text-3xl font-bold">{t("title")}</h1>
-      <p className="text-muted-foreground mt-2 mb-6">{t("intro")}</p>
+      <SectionHeading as="h1" title={t("title")} text={t("intro")} className="animate-fade-up mb-8" />
       <TrackForm
         whatsapp={storeConfig.whatsapp}
         defaultOrderNumber={order && /^[A-Za-z0-9#]{4,20}$/.test(order) ? order : undefined}

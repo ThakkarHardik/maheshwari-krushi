@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/store/breadcrumb";
 import { CategoryIcon } from "@/components/store/category-icon";
 import { ProductCard } from "@/components/store/product-card";
 import { Reveal } from "@/components/store/reveal";
+import { SectionHeading } from "@/components/store/section-heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { listingHref, parseListingParams, type ListingParams } from "@/lib/catalog/listing";
@@ -84,21 +85,17 @@ export default async function ProductsPage({ searchParams }: { searchParams: Sea
         ]}
       />
 
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-brand-800 animate-fade-up text-2xl font-bold sm:text-3xl">
-            {heading || t("title")}
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            {params.q && <span>{t("searchFor", { q: params.q })} · </span>}
-            {t("resultCount", { count: total })}
-          </p>
-        </div>
+      <div className="mt-4 flex flex-col items-center gap-3 text-center">
+        <SectionHeading as="h1" title={heading || t("title")} className="animate-fade-up" />
+        <p className="text-muted-foreground text-sm">
+          {params.q && <span>{t("searchFor", { q: params.q })} · </span>}
+          {t("resultCount", { count: total })}
+        </p>
         <SortSelect params={params} />
       </div>
 
       {activeFilters.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
           {activeFilters.map((f) => (
             <Link
               key={f.label}

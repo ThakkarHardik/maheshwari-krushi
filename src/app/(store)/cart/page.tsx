@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SectionHeading } from "@/components/store/section-heading";
 import Link from "next/link";
 import { ShoppingCart, X } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -37,7 +38,7 @@ export default async function CartPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-brand-800 text-2xl font-bold sm:text-3xl">{t("title")}</h1>
+      <SectionHeading as="h1" title={t("title")} className="animate-fade-up" />
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-4">

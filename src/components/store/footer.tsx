@@ -14,11 +14,11 @@ export async function Footer() {
 
   return (
     <footer className="bg-brand-800 text-brand-50 mt-16">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="space-y-3">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 text-center sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col items-center space-y-3">
           <Logo inverted />
           <p className="text-brand-100 text-sm">{t("about")}</p>
-          <dl className="text-brand-100 space-y-1 text-sm">
+          <dl className="text-brand-100 flex flex-col items-center space-y-1 text-sm">
             <div className="flex gap-2">
               <dt>{t("licence")}:</dt>
               <dd className="font-semibold text-white">{storeConfig.licenceNo}</dd>
@@ -50,8 +50,8 @@ export async function Footer() {
 
         <div>
           <h2 className="mb-3 text-base font-semibold text-white">{t("contactUs")}</h2>
-          <ul className="text-brand-100 space-y-3 text-sm">
-            <li className="flex gap-2">
+          <ul className="text-brand-100 flex flex-col items-center space-y-3 text-sm">
+            <li className="flex justify-center gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
               <address className="not-italic">{storeConfig.addressHi}</address>
             </li>

@@ -7,15 +7,18 @@ import {
   Lightbulb,
   MapPin,
   MessageCircle,
+  PackageCheck,
   Phone,
   ReceiptText,
   ShieldCheck,
+  ShoppingBag,
   Users,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { AboutPhoto } from "@/components/store/about-photo";
 import { CategoryIcon } from "@/components/store/category-icon";
 import { Reveal } from "@/components/store/reveal";
+import { SectionHeading } from "@/components/store/section-heading";
 import { Button } from "@/components/ui/button";
 import { MAPS_URL, storeConfig } from "@/config/store";
 import { listingHref } from "@/lib/catalog/listing";
@@ -32,7 +35,7 @@ export default async function AboutPage() {
   const t = await getTranslations("about");
   const tWa = await getTranslations("whatsapp");
   const locale = await getLocale();
-  const categories = await getStoreCategories().then((all) => all.filter((c) => c._count.products > 0));
+  const categories = (await getStoreCategories()).filter((c) => c._count.products > 0);
   const story = t.raw("story") as string[];
 
   const values = [
@@ -42,44 +45,47 @@ export default async function AboutPage() {
     { key: "respect", icon: Users },
     { key: "after", icon: HandHeart },
   ] as const;
-  const support = ["before", "during", "after"] as const;
+  const support = [
+    { key: "before", icon: Lightbulb },
+    { key: "during", icon: ShoppingBag },
+    { key: "after", icon: PackageCheck },
+  ] as const;
 
   return (
     <>
       {/* Hero */}
       <section className="bg-brand-50 border-border border-b">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-12 md:grid-cols-2 md:py-16">
-          <div>
-            <p className="text-brand-700 animate-fade-up inline-flex items-center gap-1 text-sm font-semibold">
-              <MapPin className="size-4" aria-hidden /> {t("badge")}
-            </p>
-            <h1 className="text-brand-800 animate-fade-up mt-2 text-3xl leading-tight font-bold [animation-delay:80ms] sm:text-4xl">
-              {t("heroTitle")}
-            </h1>
-            <p className="animate-fade-up mt-4 text-lg leading-relaxed [animation-delay:160ms]">
-              {t("heroText")}
-            </p>
-            <p className="bg-accent-300/60 text-brand-900 animate-fade-up mt-6 inline-block rounded-md px-4 py-2 font-semibold [animation-delay:240ms]">
-              {t("promise")}
-            </p>
-          </div>
-          <div className="animate-scale-in [animation-delay:200ms]">
+        <div className="mx-auto max-w-4xl px-4 pt-12 pb-10 text-center sm:pt-16">
+          <p className="text-brand-700 animate-fade-up inline-flex items-center gap-1 text-sm font-semibold">
+            <MapPin className="size-4" aria-hidden /> {t("badge")}
+          </p>
+          <h1 className="text-brand-800 animate-fade-up mt-2 text-3xl leading-tight font-bold text-balance [animation-delay:80ms] sm:text-5xl">
+            {t("heroTitle")}
+          </h1>
+          <p className="animate-fade-up mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-pretty [animation-delay:160ms]">
+            {t("heroText")}
+          </p>
+          <p className="bg-accent-300/70 text-brand-900 animate-fade-up mt-6 inline-block rounded-full px-5 py-2 font-semibold [animation-delay:240ms]">
+            {t("promise")}
+          </p>
+          <div className="animate-scale-in mx-auto mt-8 max-w-xl [animation-delay:300ms]">
             <AboutPhoto name="field" alt={t("photoAlt.field")} />
           </div>
         </div>
       </section>
 
       {/* Story */}
-      <Reveal as="section" className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 md:grid-cols-2">
-        <AboutPhoto name="shop" alt={t("photoAlt.shop")} className="order-last md:order-first" />
-        <div>
-          <h2 className="text-brand-800 text-2xl font-bold sm:text-3xl">{t("storyTitle")}</h2>
-          <span className="bg-accent-400 mt-3 block h-1 w-16 rounded-full" aria-hidden />
-          {story.map((p) => (
-            <p key={p.slice(0, 24)} className="mt-4 leading-relaxed">
-              {p}
-            </p>
-          ))}
+      <Reveal as="section" className="mx-auto max-w-5xl px-4 py-14">
+        <SectionHeading title={t("storyTitle")} />
+        <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
+          <AboutPhoto name="shop" alt={t("photoAlt.shop")} />
+          <div className="space-y-4 text-center text-pretty">
+            {story.map((p) => (
+              <p key={p.slice(0, 24)} className="leading-relaxed">
+                {p}
+              </p>
+            ))}
+          </div>
         </div>
       </Reveal>
 
@@ -87,8 +93,7 @@ export default async function AboutPage() {
       <section className="bg-brand-800 text-white">
         <div className="mx-auto max-w-6xl px-4 py-14">
           <Reveal>
-            <h2 className="text-center text-2xl font-bold sm:text-3xl">{t("valuesTitle")}</h2>
-            <span className="bg-accent-400 mx-auto mt-3 block h-1 w-16 rounded-full" aria-hidden />
+            <SectionHeading title={t("valuesTitle")} tone="light" />
           </Reveal>
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {values.map(({ key, icon: Icon }, i) => (
@@ -96,7 +101,7 @@ export default async function AboutPage() {
                 as="li"
                 key={key}
                 delay={i * 80}
-                className="group rounded-card bg-white/10 p-5 transition duration-300 hover:-translate-y-1 hover:bg-white/15"
+                className="group rounded-card flex flex-col items-center bg-white/10 p-5 text-center transition duration-300 hover:-translate-y-1 hover:bg-white/15"
               >
                 <span className="bg-accent-400 text-brand-900 flex size-12 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
                   <Icon className="size-6" aria-hidden />
@@ -109,49 +114,50 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* How we help */}
+      {/* How we help — before, during, after */}
       <section className="mx-auto max-w-6xl px-4 py-14">
-        <Reveal className="grid items-center gap-8 md:grid-cols-[1fr_1.4fr]">
-          <AboutPhoto name="advice" alt={t("photoAlt.advice")} />
-          <div>
-            <h2 className="text-brand-800 text-2xl font-bold sm:text-3xl">{t("supportTitle")}</h2>
-            <span className="bg-accent-400 mt-3 block h-1 w-16 rounded-full" aria-hidden />
-            <ol className="mt-6 space-y-5">
-              {support.map((key, i) => (
-                <li key={key} className="flex gap-4">
-                  <span className="bg-brand-700 flex size-9 shrink-0 items-center justify-center rounded-full font-bold text-white">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="text-lg font-semibold">{t(`support.${key}.title`)}</h3>
-                    <ul className="mt-1 space-y-1">
-                      {(t.raw(`support.${key}.items`) as string[]).map((item) => (
-                        <li key={item} className="text-muted-foreground flex gap-2 text-sm">
-                          <CircleCheck className="text-brand-600 mt-0.5 size-4 shrink-0" aria-hidden />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
+        <Reveal>
+          <SectionHeading title={t("supportTitle")} />
         </Reveal>
+        <ol className="mt-12 grid gap-8 md:grid-cols-3 md:gap-5">
+          {support.map(({ key, icon: Icon }, i) => (
+            <Reveal
+              as="li"
+              key={key}
+              delay={i * 100}
+              className="group rounded-card relative flex flex-col items-center bg-white p-6 text-center shadow-sm ring-1 ring-black/5 transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <span className="bg-brand-700 absolute -top-4 flex size-8 items-center justify-center rounded-full text-sm font-bold text-white shadow">
+                {i + 1}
+              </span>
+              <span className="bg-brand-50 text-brand-700 group-hover:bg-brand-700 mt-2 flex size-14 items-center justify-center rounded-full transition-colors duration-300 group-hover:text-white">
+                <Icon className="size-7" aria-hidden />
+              </span>
+              <h3 className="mt-4 text-lg font-semibold">{t(`support.${key}.title`)}</h3>
+              <ul className="mt-3 space-y-2">
+                {(t.raw(`support.${key}.items`) as string[]).map((item) => (
+                  <li key={item} className="text-muted-foreground text-sm">
+                    <CircleCheck className="text-brand-600 mr-1 inline size-4 align-[-2px]" aria-hidden />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </ol>
       </section>
 
       {/* What we sell */}
       {categories.length > 0 && (
         <Reveal as="section" className="bg-brand-50">
-          <div className="mx-auto max-w-6xl px-4 py-14 text-center">
-            <h2 className="text-brand-800 text-2xl font-bold sm:text-3xl">{t("sellTitle")}</h2>
-            <p className="text-muted-foreground mt-2">{t("sellText")}</p>
-            <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="mx-auto max-w-5xl px-4 py-14">
+            <SectionHeading title={t("sellTitle")} text={t("sellText")} />
+            <ul className="mt-8 flex flex-wrap justify-center gap-3 sm:gap-4">
               {categories.map((c) => (
-                <li key={c.id}>
+                <li key={c.id} className="w-40">
                   <Link
                     href={listingHref({ category: c.slug })}
-                    className="group rounded-card flex h-full flex-col items-center gap-2 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    className="group rounded-card flex h-full flex-col items-center gap-2 bg-white p-5 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
                     <CategoryIcon
                       slug={c.slug}
@@ -167,33 +173,32 @@ export default async function AboutPage() {
       )}
 
       {/* Trust + visit */}
-      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-14 md:grid-cols-2">
-        <Reveal className="border-border rounded-card border bg-white p-6 shadow-sm">
-          <h2 className="text-brand-800 flex items-center gap-2 text-xl font-semibold">
-            <BadgeCheck className="size-6" aria-hidden /> {t("trustTitle")}
-          </h2>
-          <dl className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between gap-4">
+      <section className="mx-auto grid max-w-5xl gap-6 px-4 py-14 md:grid-cols-2">
+        <Reveal className="rounded-card flex flex-col items-center bg-white p-6 text-center shadow-sm ring-1 ring-black/5">
+          <BadgeCheck className="text-brand-700 size-10" aria-hidden />
+          <h2 className="text-brand-800 mt-2 text-xl font-semibold">{t("trustTitle")}</h2>
+          <dl className="mt-4 w-full space-y-3 text-sm">
+            <div>
               <dt className="text-muted-foreground">{t("licence")}</dt>
-              <dd className="font-semibold">{storeConfig.licenceNo}</dd>
+              <dd className="text-base font-semibold">{storeConfig.licenceNo}</dd>
             </div>
-            <div className="flex justify-between gap-4">
+            <div>
               <dt className="text-muted-foreground">{t("gstin")}</dt>
-              <dd className="font-semibold">{storeConfig.gstin}</dd>
+              <dd className="text-base font-semibold">{storeConfig.gstin}</dd>
             </div>
-            <div className="flex justify-between gap-4">
+            <div>
               <dt className="text-muted-foreground">{t("address")}</dt>
-              <dd className="text-right font-semibold">{storeConfig.addressHi}</dd>
+              <dd className="font-semibold">{storeConfig.addressHi}</dd>
             </div>
           </dl>
         </Reveal>
         <Reveal
           delay={100}
-          className="rounded-card from-brand-700 to-brand-600 bg-gradient-to-br p-6 text-white shadow-md"
+          className="rounded-card from-brand-700 to-brand-600 flex flex-col items-center justify-center bg-gradient-to-br p-6 text-center text-white shadow-md"
         >
           <h2 className="text-xl font-semibold">{t("visitTitle")}</h2>
           <p className="text-brand-100 mt-2">{t("visitText")}</p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button asChild variant="accent" className="transition hover:-translate-y-0.5">
               <a href={`tel:+91${storeConfig.phone}`}>
                 <Phone /> +91 {storeConfig.phone}
@@ -201,8 +206,7 @@ export default async function AboutPage() {
             </Button>
             <Button
               asChild
-              variant="outline"
-              className="hover:text-brand-800 border-white bg-transparent text-white transition hover:-translate-y-0.5 hover:bg-white"
+              className="bg-whatsapp text-white transition hover:-translate-y-0.5 hover:brightness-95"
             >
               <a
                 href={buildWhatsAppLink(storeConfig.whatsapp, tWa("defaultMessage"))}

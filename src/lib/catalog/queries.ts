@@ -166,27 +166,42 @@ export async function listProducts(params: ListingParams, locale: string) {
   };
 }
 
-export function getProductBySlug(slug: string) {
-  return db.product.findFirst({
-    where: { ...publicProductWhere, slug },
-    include: {
-      category: { select: { slug: true, nameHi: true, nameEn: true } },
-      images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true } },
-      crops: { select: { crop: { select: { slug: true, nameHi: true, nameEn: true } } } },
-      variants: {
-        where: { isActive: true },
-        orderBy: [{ sortOrder: "asc" }, { price: "asc" }],
-        select: {
-          id: true,
-          label: true,
-          mrp: true,
-          price: true,
-          lowStockThreshold: true,
-          batches: { select: { qtyAvailable: true, expiryDate: true } },
-        },
-      },
+const productDetailInclude = {
+  category: { select: { slug: true, nameHi: true, nameEn: true } },
+  images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true } },
+  crops: { select: { crop: { select: { slug: true, nameHi: true, nameEn: true } } } },
+  variants: {
+    where: { isActive: true },
+    orderBy: [{ sortOrder: "asc" }, { price: "asc" }],
+    select: {
+      id: true,
+      label: true,
+      mrp: true,
+      price: true,
+      lowStockThreshold: true,
+      batches: { select: { qtyAvailable: true, expiryDate: true } },
     },
-  });
+  },
+} satisfies Prisma.ProductInclude;
+
+/**
+ * The product shown on the home page: the most recently updated featured
+ * product (mark the product you sell as "featured" in the admin panel).
+ */
+export async function getSpotlightProduct() {
+  const [product, total] = await Promise.all([
+    db.product.findFirst({
+      where: { ...publicProductWhere, isFeatured: true },
+      orderBy: [{ updatedAt: "desc" }],
+      include: productDetailInclude,
+    }),
+    db.product.count({ where: publicProductWhere }),
+  ]);
+  return { product, otherProducts: Math.max(0, total - (product ? 1 : 0)) };
+}
+
+export function getProductBySlug(slug: string) {
+  return db.product.findFirst({ where: { ...publicProductWhere, slug }, include: productDetailInclude });
 }
 
 export type ProductDetail = NonNullable<Awaited<ReturnType<typeof getProductBySlug>>>;

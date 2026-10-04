@@ -53,14 +53,17 @@ export function TrackForm({
       </form>
 
       {state.error && (
-        <p role="alert" className="text-danger rounded-md bg-red-50 px-4 py-3">
+        <p role="alert" className="text-danger rounded-md bg-red-50 px-4 py-3 text-center">
           {t(state.error)}
         </p>
       )}
 
       {order && (
-        <section aria-live="polite" className="border-border rounded-card space-y-5 border bg-white p-5">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <section
+          aria-live="polite"
+          className="border-border rounded-card animate-scale-in space-y-5 border bg-white p-5 text-center"
+        >
+          <div className="flex flex-col items-center gap-1">
             <h2 className="text-brand-800 text-xl font-bold">#{order.orderNumber}</h2>
             <p className="text-muted-foreground text-sm">
               {t("placed")}: {format.dateTime(new Date(order.placedAt), { dateStyle: "medium" })}

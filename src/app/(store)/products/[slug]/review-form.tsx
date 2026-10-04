@@ -49,10 +49,10 @@ export function ReviewForm({ productId }: { productId: string }) {
       onSubmit={submit}
       onChange={markEdited}
       noValidate
-      className="border-border rounded-card space-y-4 border bg-white p-5"
+      className="border-border rounded-card animate-scale-in w-full max-w-2xl space-y-4 border bg-white p-5 text-left"
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="flex-1 text-center">
           <h3 className="text-brand-800 text-lg font-semibold">{t("formTitle")}</h3>
           <p className="text-muted-foreground text-sm">{t("onlyBuyers")}</p>
         </div>
@@ -72,8 +72,8 @@ export function ReviewForm({ productId }: { productId: string }) {
       </div>
 
       <fieldset>
-        <legend className="mb-1 text-sm font-medium">{t("rating")}</legend>
-        <div className="flex gap-1" role="radiogroup">
+        <legend className="mx-auto mb-1 text-sm font-medium">{t("rating")}</legend>
+        <div className="flex justify-center gap-1" role="radiogroup">
           {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
@@ -136,9 +136,11 @@ export function ReviewForm({ productId }: { productId: string }) {
           {t(`errors.${errors._form}`)}
         </p>
       )}
-      <Button type="submit" disabled={pending}>
-        {pending ? t("sending") : t("submit")}
-      </Button>
+      <div className="flex justify-center">
+        <Button type="submit" disabled={pending}>
+          {pending ? t("sending") : t("submit")}
+        </Button>
+      </div>
     </form>
   );
 }

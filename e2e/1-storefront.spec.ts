@@ -4,7 +4,9 @@ test.describe("storefront", () => {
   test("home shows the hero, featured products and policy links", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1, name: "बेहतरीन उत्पाद, बेहतर फसल" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "हमारे प्रमुख उत्पाद" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "हमारा उत्पाद" })).toBeVisible();
+    // The spotlight product can be bought straight from the home page.
+    await expect(page.locator("#product").getByRole("button", { name: /Add to Cart/ })).toBeVisible();
     await expect(page.getByRole("link", { name: "नियम और शर्तें" })).toBeVisible();
     // No sideways scrolling on any screen size.
     const overflow = await page.evaluate(

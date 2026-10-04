@@ -10,12 +10,15 @@ import { storeConfig } from "@/config/store";
 import Link from "next/link";
 import { ProductCard } from "@/components/store/product-card";
 import { Reveal } from "@/components/store/reveal";
+import { SectionHeading } from "@/components/store/section-heading";
 import { listingHref } from "@/lib/catalog/listing";
 import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/catalog/queries";
-import { nextExpiry, sellableQuantity } from "@/lib/catalog/stock";
+import { toPanelVariants } from "@/lib/catalog/panel";
+import { nextExpiry } from "@/lib/catalog/stock";
 import { localized, localizedList } from "@/lib/format";
 import { Gallery } from "./gallery";
-import { PurchasePanel, type PanelVariant } from "./purchase-panel";
+import { InfoTabs } from "./info-tabs";
+import { PurchasePanel } from "./purchase-panel";
 import { ReviewForm } from "./review-form";
 
 type Params = Promise<{ slug: string }>;
@@ -67,17 +70,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   const allBatches = product.variants.flatMap((v) => v.batches);
   const expiry = nextExpiry(allBatches);
 
-  const variants: PanelVariant[] = product.variants.map((v) => {
-    const stock = sellableQuantity(v.batches);
-    return {
-      id: v.id,
-      label: v.label,
-      price: v.price.toString(),
-      mrp: v.mrp.toString(),
-      stock,
-      lowStock: stock > 0 && stock <= v.lowStockThreshold,
-    };
-  });
+  const variants = toPanelVariants(product.variants);
   const rating = product.ratingAvg.toNumber();
   const anyInStock = variants.some((v) => v.stock > 0);
 
@@ -125,16 +118,17 @@ export default async function ProductPage({ params }: { params: Params }) {
         ]}
       />
 
-      <div className="mt-6 grid gap-8 md:grid-cols-2">
+      <div className="mt-6 grid items-center gap-8 md:grid-cols-2">
         <Gallery images={product.images} name={name} />
 
-        <div className="space-y-5">
+        <div className="rounded-card space-y-5 bg-white p-5 text-center shadow-sm ring-1 ring-black/5 sm:p-6">
           <div>
-            <h1 className="text-brand-800 text-2xl leading-tight font-bold sm:text-3xl">
+            <p className="text-brand-600 text-sm font-semibold">{categoryName}</p>
+            <h1 className="text-brand-800 mt-1 text-2xl leading-tight font-bold text-balance sm:text-3xl">
               {name}{" "}
               {subLabel && <span className="text-muted-foreground text-xl font-medium">{subLabel}</span>}
             </h1>
-            <div className="mt-2 flex items-center gap-2 text-sm">
+            <a href="#reviews" className="mt-2 inline-flex items-center gap-2 text-sm hover:underline">
               {product.ratingCount > 0 ? (
                 <>
                   <Stars rating={rating} label={t("rating", { rating: rating.toFixed(1) })} />
@@ -145,7 +139,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               ) : (
                 <span className="text-muted-foreground">{t("noReviews")}</span>
               )}
-            </div>
+            </a>
           </div>
 
           <PurchasePanel
@@ -157,114 +151,137 @@ export default async function ProductPage({ params }: { params: Params }) {
         </div>
       </div>
 
-      <div className="mt-10 grid gap-8 md:grid-cols-3">
-        <div className="space-y-8 md:col-span-2">
-          {description && (
-            <section>
-              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("description")}</h2>
-              <p className="whitespace-pre-line">{description}</p>
-            </section>
-          )}
-          {product.crops.length > 0 && (
-            <section>
-              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("crops")}</h2>
-              <ul className="flex flex-wrap gap-2">
-                {product.crops.map(({ crop }) => (
-                  <li key={crop.slug}>
-                    <Link
-                      href={listingHref({ crop: crop.slug })}
-                      className="border-border hover:border-brand-700 hover:bg-brand-700 inline-flex items-center rounded-full border bg-white px-3 py-1 text-sm transition hover:text-white"
-                    >
-                      {localized(crop.nameHi, crop.nameEn, locale)}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {benefits.length > 0 && (
-            <section>
-              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("benefits")}</h2>
-              <ul className="space-y-2">
-                {benefits.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <CircleCheck className="text-brand-600 mt-0.5 size-5 shrink-0" aria-hidden />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {usage && (
-            <section>
-              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("usage")}</h2>
-              <p className="whitespace-pre-line">{usage}</p>
-            </section>
-          )}
-          {product.safetyHi && (
-            <section>
-              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("safety")}</h2>
-              <p className="bg-accent-300/30 rounded-md px-4 py-3 whitespace-pre-line">{product.safetyHi}</p>
-            </section>
-          )}
-        </div>
-
-        <aside>
-          <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("details")}</h2>
-          <dl className="border-border rounded-card divide-border divide-y border bg-white text-sm">
-            {details.map((d) => (
-              <div key={d.label} className="flex justify-between gap-4 px-4 py-3">
-                <dt className="text-muted-foreground">{d.label}</dt>
-                <dd className="text-right font-medium">{d.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </aside>
-      </div>
-
-      <section id="reviews" className="mt-10 space-y-4" aria-labelledby="reviews-heading">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 id="reviews-heading" className="text-brand-800 text-xl font-semibold">
-            {tr("title")}
-          </h2>
-          {product.ratingCount > 0 && (
-            <span className="flex items-center gap-2 text-sm">
-              <Stars rating={rating} label={t("rating", { rating: rating.toFixed(1) })} />
-              <span className="font-semibold">{rating.toFixed(1)}</span>
-              <span className="text-muted-foreground">{t("reviews", { count: product.ratingCount })}</span>
-            </span>
-          )}
-        </div>
-        {reviews.length === 0 ? (
-          <p className="text-muted-foreground">{tr("none")}</p>
-        ) : (
-          <ul className="grid gap-3 md:grid-cols-2">
-            {reviews.map((r) => (
-              <li key={r.id} className="border-border rounded-card border bg-white p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Stars rating={r.rating} label={t("rating", { rating: r.rating })} />
-                  <span className="text-muted-foreground text-xs">
-                    {format.dateTime(r.createdAt, { dateStyle: "medium" })}
-                  </span>
+      <Reveal as="section" className="mx-auto mt-10 max-w-4xl">
+        <InfoTabs
+          tabs={[
+            {
+              key: "about",
+              label: t("description"),
+              content: (
+                <div className="space-y-5">
+                  {description && (
+                    <p className="mx-auto max-w-2xl text-pretty whitespace-pre-line">{description}</p>
+                  )}
+                  {benefits.length > 0 && (
+                    <div>
+                      <h2 className="text-brand-800 mb-3 font-semibold">{t("benefits")}</h2>
+                      <ul className="grid gap-2 sm:grid-cols-2">
+                        {benefits.map((b) => (
+                          <li
+                            key={b}
+                            className="bg-brand-50 flex items-center justify-center gap-2 rounded-lg px-3 py-2"
+                          >
+                            <CircleCheck className="text-brand-600 size-5 shrink-0" aria-hidden />
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {product.crops.length > 0 && (
+                    <div>
+                      <h2 className="text-brand-800 mb-3 font-semibold">{t("crops")}</h2>
+                      <ul className="flex flex-wrap justify-center gap-2">
+                        {product.crops.map(({ crop }) => (
+                          <li key={crop.slug}>
+                            <Link
+                              href={listingHref({ crop: crop.slug })}
+                              className="border-border hover:border-brand-700 hover:bg-brand-700 inline-flex items-center rounded-full border bg-white px-3 py-1 text-sm transition hover:text-white"
+                            >
+                              {localized(crop.nameHi, crop.nameEn, locale)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-                {r.comment && <p className="mt-2 whitespace-pre-line">{r.comment}</p>}
-                <p className="text-muted-foreground mt-2 flex items-center gap-1 text-sm">
+              ),
+            },
+            ...(usage
+              ? [
+                  {
+                    key: "usage",
+                    label: t("usage"),
+                    content: <p className="mx-auto max-w-2xl whitespace-pre-line">{usage}</p>,
+                  },
+                ]
+              : []),
+            ...(product.safetyHi
+              ? [
+                  {
+                    key: "safety",
+                    label: t("safety"),
+                    content: (
+                      <p className="bg-accent-300/30 mx-auto max-w-2xl rounded-md px-4 py-3 whitespace-pre-line">
+                        {product.safetyHi}
+                      </p>
+                    ),
+                  },
+                ]
+              : []),
+            {
+              key: "details",
+              label: t("details"),
+              content: (
+                <dl className="border-border divide-border mx-auto max-w-md divide-y rounded-lg border text-sm">
+                  {details.map((d) => (
+                    <div key={d.label} className="flex justify-between gap-4 px-4 py-3">
+                      <dt className="text-muted-foreground">{d.label}</dt>
+                      <dd className="text-right font-medium">{d.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ),
+            },
+          ]}
+        />
+      </Reveal>
+
+      <section
+        id="reviews"
+        className="mx-auto mt-12 max-w-4xl scroll-mt-24 space-y-5"
+        aria-labelledby="reviews-heading"
+      >
+        <SectionHeading id="reviews-heading" title={tr("title")} />
+        {product.ratingCount > 0 && (
+          <p className="flex items-center justify-center gap-2 text-sm">
+            <Stars rating={rating} label={t("rating", { rating: rating.toFixed(1) })} />
+            <span className="text-lg font-semibold">{rating.toFixed(1)}</span>
+            <span className="text-muted-foreground">{t("reviews", { count: product.ratingCount })}</span>
+          </p>
+        )}
+        {reviews.length === 0 ? (
+          <p className="text-muted-foreground text-center">{tr("none")}</p>
+        ) : (
+          <ul className="flex flex-wrap justify-center gap-3">
+            {reviews.map((r) => (
+              <li
+                key={r.id}
+                className="rounded-card w-full bg-white p-5 text-center shadow-sm ring-1 ring-black/5 md:w-[calc(50%-0.375rem)]"
+              >
+                <Stars rating={r.rating} label={t("rating", { rating: r.rating })} />
+                {r.comment && <p className="mt-2 whitespace-pre-line">“{r.comment}”</p>}
+                <p className="text-muted-foreground mt-3 flex flex-wrap items-center justify-center gap-1 text-sm">
                   {r.name}
                   <span className="text-brand-700 inline-flex items-center gap-0.5 text-xs font-medium">
                     · <BadgeCheck className="size-3.5" aria-hidden /> {tr("verified")}
                   </span>
+                  <span className="text-xs">· {format.dateTime(r.createdAt, { dateStyle: "medium" })}</span>
                 </p>
               </li>
             ))}
           </ul>
         )}
-        <ReviewForm productId={product.id} />
+        <div className="flex justify-center">
+          <ReviewForm productId={product.id} />
+        </div>
       </section>
 
       {related.length > 0 && (
-        <Reveal as="section" className="mt-12">
-          <h2 className="text-brand-800 mb-4 text-xl font-semibold">{tl("related")}</h2>
-          <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <Reveal as="section" className="mt-14">
+          <SectionHeading title={tl("related")} />
+          <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {related.map((p) => (
               <li key={p.slug}>
                 <ProductCard product={p} />

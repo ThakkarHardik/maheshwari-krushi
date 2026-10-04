@@ -87,7 +87,12 @@
     "ctaText": "Tell us your crop and problem — we'll suggest the right product and how to use it.",
     "ctaCall": "Call now",
     "ctaWhatsapp": "Ask on WhatsApp",
-    "ctaMessage": "Hello, I need advice for my crop."
+    "ctaMessage": "Hello, I need advice for my crop.",
+    "spotlightTitle": "Our product",
+    "spotlightText": "Choose the pack size you need — all prices include tax",
+    "fullDetails": "Full details, how to use and reviews",
+    "moreProducts": "See more products",
+    "helpLinks": "Questions? Read the FAQ"
   },
   "trust": {
     "securePayment": "Secure payment",
