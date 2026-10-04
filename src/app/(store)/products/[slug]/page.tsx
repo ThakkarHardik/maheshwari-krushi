@@ -7,7 +7,11 @@ import { Breadcrumb } from "@/components/store/breadcrumb";
 import { Stars } from "@/components/store/stars";
 import { TrustStrip } from "@/components/store/trust-strip";
 import { storeConfig } from "@/config/store";
-import { getApprovedReviews, getProductBySlug } from "@/lib/catalog/queries";
+import Link from "next/link";
+import { ProductCard } from "@/components/store/product-card";
+import { Reveal } from "@/components/store/reveal";
+import { listingHref } from "@/lib/catalog/listing";
+import { getApprovedReviews, getProductBySlug, getRelatedProducts } from "@/lib/catalog/queries";
 import { nextExpiry, sellableQuantity } from "@/lib/catalog/stock";
 import { localized, localizedList } from "@/lib/format";
 import { Gallery } from "./gallery";
@@ -48,7 +52,11 @@ export default async function ProductPage({ params }: { params: Params }) {
   const locale = await getLocale();
   const format = await getFormatter();
   const tr = await getTranslations("reviews");
-  const reviews = await getApprovedReviews(product.id);
+  const tl = await getTranslations("products");
+  const [reviews, related] = await Promise.all([
+    getApprovedReviews(product.id),
+    getRelatedProducts(product.id, product.categoryId, locale),
+  ]);
 
   const name = localized(product.nameHi, product.nameEn, locale);
   const subLabel = localized(product.subLabelHi, product.subLabelEn, locale);
@@ -56,7 +64,6 @@ export default async function ProductPage({ params }: { params: Params }) {
   const benefits = localizedList(product.benefitsHi, product.benefitsEn, locale);
   const usage = localized(product.usageHi, product.usageEn, locale);
   const categoryName = localized(product.category.nameHi, product.category.nameEn, locale);
-  const crops = product.crops.map((c) => localized(c.crop.nameHi, c.crop.nameEn, locale));
   const allBatches = product.variants.flatMap((v) => v.batches);
   const expiry = nextExpiry(allBatches);
 
@@ -100,7 +107,6 @@ export default async function ProductPage({ params }: { params: Params }) {
     product.manufacturer && { label: t("manufacturer"), value: product.manufacturer },
     product.licenceNo && { label: t("licence"), value: product.licenceNo },
     expiry && { label: t("expiry"), value: format.dateTime(expiry, { month: "short", year: "numeric" }) },
-    crops.length > 0 && { label: t("crops"), value: crops.join(", ") },
   ].filter((d): d is { label: string; value: string } => Boolean(d));
 
   return (
@@ -157,6 +163,23 @@ export default async function ProductPage({ params }: { params: Params }) {
             <section>
               <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("description")}</h2>
               <p className="whitespace-pre-line">{description}</p>
+            </section>
+          )}
+          {product.crops.length > 0 && (
+            <section>
+              <h2 className="text-brand-800 mb-2 text-xl font-semibold">{t("crops")}</h2>
+              <ul className="flex flex-wrap gap-2">
+                {product.crops.map(({ crop }) => (
+                  <li key={crop.slug}>
+                    <Link
+                      href={listingHref({ crop: crop.slug })}
+                      className="border-border hover:border-brand-700 hover:bg-brand-700 inline-flex items-center rounded-full border bg-white px-3 py-1 text-sm transition hover:text-white"
+                    >
+                      {localized(crop.nameHi, crop.nameEn, locale)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
           {benefits.length > 0 && (
@@ -237,6 +260,19 @@ export default async function ProductPage({ params }: { params: Params }) {
         )}
         <ReviewForm productId={product.id} />
       </section>
+
+      {related.length > 0 && (
+        <Reveal as="section" className="mt-12">
+          <h2 className="text-brand-800 mb-4 text-xl font-semibold">{tl("related")}</h2>
+          <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {related.map((p) => (
+              <li key={p.slug}>
+                <ProductCard product={p} />
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      )}
 
       <div className="border-border bg-brand-50 rounded-card mt-10 border px-4 py-5">
         <TrustStrip />

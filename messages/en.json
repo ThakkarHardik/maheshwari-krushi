@@ -20,7 +20,74 @@
     "heroTagline": "Right advice • Right product • Right price",
     "shopNow": "Shop now",
     "featuredTitle": "Our featured products",
-    "viewAll": "View all products"
+    "viewAll": "View all products",
+    "heroBadge": "Sailana's trusted krishi sewa kendra",
+    "heroText": "Seeds, plant tonics and fodder seeds — with the right advice, at the right price, delivered to your village.",
+    "askAdvice": "Ask for advice on WhatsApp",
+    "highlights": {
+      "licensed": "Licensed seller",
+      "bill": "GST bill with every order",
+      "cod": "Cash on Delivery",
+      "local": "Fast delivery from Sailana"
+    },
+    "categoriesTitle": "Shop by category",
+    "categoriesText": "Pick the category you need",
+    "productCount": "{count} products",
+    "featuredText": "Farmers' favourites — press + or hover over a photo for a quick look",
+    "cropsTitle": "Shop by crop",
+    "cropsText": "Choose your crop to see suitable products",
+    "seasons": {
+      "KHARIF": "Kharif",
+      "RABI": "Rabi",
+      "ZAID": "Zaid"
+    },
+    "stepsTitle": "How to order",
+    "stepsText": "Just 4 easy steps — no account or password needed",
+    "steps": {
+      "1": {
+        "title": "Choose a product",
+        "text": "Browse by category or crop, then pick the pack size and quantity."
+      },
+      "2": {
+        "title": "Add to cart",
+        "text": "Press \"Add to Cart\" or go straight to \"Buy Now\"."
+      },
+      "3": {
+        "title": "Enter your address",
+        "text": "Name, mobile, address and PIN code — delivery availability shows instantly."
+      },
+      "4": {
+        "title": "Delivered home",
+        "text": "Pay cash when it arrives. Track the status with your order number."
+      }
+    },
+    "whyTitle": "Why farmers choose us",
+    "whyMore": "Learn more about us",
+    "why": {
+      "advice": {
+        "title": "Right advice",
+        "text": "Which product and how much, for your crop, season and soil — we tell you."
+      },
+      "genuine": {
+        "title": "Genuine products",
+        "text": "From a licensed shop, with batch number and expiry checked on every pack."
+      },
+      "price": {
+        "title": "Honest prices",
+        "text": "Below MRP, all taxes included, with a proper GST bill for every order."
+      },
+      "support": {
+        "title": "With you at every step",
+        "text": "Help on phone or WhatsApp — before and after you buy."
+      }
+    },
+    "faqTitle": "Frequently asked questions",
+    "faqMore": "More questions? Contact us",
+    "ctaTitle": "Not sure which product to buy?",
+    "ctaText": "Tell us your crop and problem — we'll suggest the right product and how to use it.",
+    "ctaCall": "Call now",
+    "ctaWhatsapp": "Ask on WhatsApp",
+    "ctaMessage": "Hello, I need advice for my crop."
   },
   "trust": {
     "securePayment": "Secure payment",
@@ -30,8 +97,79 @@
   },
   "about": {
     "title": "About us",
-    "body": "Maheshwari Krishi Sewa Kendra in Sailana (District Ratlam) is dedicated to serving farmers. We supply quality seeds, plant tonics, animal fodder seeds and other farm inputs at the right price, along with the right advice for your crop.",
-    "promise": "Our promise: Right advice • Right product • Right price"
+    "badge": "Sailana, District Ratlam",
+    "heroTitle": "Serving farmers, with trust",
+    "heroText": "Maheshwari Krishi Sewa Kendra is a licensed agri-input store on M.G. Road, Sailana. We supply farmers in the area with quality seeds, plant tonics, fodder seeds and other farm inputs at the right price — along with the right advice.",
+    "storyTitle": "What we believe",
+    "story": [
+      "A Malwa farmer's hard work pays off fully only when the seed is good, the input is right, and it is used at the right time in the right amount. So we don't just sell products — we understand each farmer's crop, soil and problem, and advise accordingly.",
+      "The same service is now online. Without visiting the shop you can see products and prices, place an order, and pay cash on delivery. If you have a question, one call or WhatsApp is enough."
+    ],
+    "promise": "Our promise: Right advice • Right product • Right price",
+    "valuesTitle": "Our values — helping customers is who we are",
+    "values": {
+      "advice": {
+        "title": "Advice first, sale later",
+        "text": "We suggest only what your crop truly needs — and tell you plainly when it doesn't need anything."
+      },
+      "quality": {
+        "title": "Genuine, fresh stock",
+        "text": "Stock from licensed sources, every batch number and expiry recorded, no pushing of old stock."
+      },
+      "honesty": {
+        "title": "Transparent prices",
+        "text": "MRP and our price shown clearly, no hidden charges, a GST bill with every order."
+      },
+      "respect": {
+        "title": "Respect for farmers",
+        "text": "We speak your language and answer patiently — the same service for small and large orders."
+      },
+      "after": {
+        "title": "With you after the sale",
+        "text": "Trouble using a product, or a faulty pack? Call or WhatsApp — we'll sort it out."
+      }
+    },
+    "supportTitle": "How we help you",
+    "support": {
+      "before": {
+        "title": "Before you buy",
+        "items": [
+          "Product advice for your crop and problem",
+          "The right dose and method of use",
+          "By phone, WhatsApp or at the shop — whichever suits you"
+        ]
+      },
+      "during": {
+        "title": "When you order",
+        "items": [
+          "A simple Hindi website, no passwords",
+          "Order confirmation by phone",
+          "Genuine stock with batch numbers and a GST bill"
+        ]
+      },
+      "after": {
+        "title": "After delivery",
+        "items": [
+          "Order tracking and WhatsApp updates",
+          "Damaged or wrong items replaced within 48 hours",
+          "Answers to your questions while using the product"
+        ]
+      }
+    },
+    "sellTitle": "What we sell",
+    "sellText": "Only trusted, checked products in every category",
+    "trustTitle": "Trust details",
+    "licence": "Licence no.",
+    "gstin": "GSTIN",
+    "address": "Shop address",
+    "visitTitle": "Visit the shop or give us a call",
+    "visitText": "We'd be glad to hear about your crop.",
+    "directions": "Get directions (Google Maps)",
+    "photoAlt": {
+      "field": "Green fields of Malwa",
+      "shop": "Maheshwari Krishi Sewa Kendra shop",
+      "advice": "Advising a farmer"
+    }
   },
   "contact": {
     "title": "Contact us",
@@ -41,7 +179,28 @@
     "whatsapp": "WhatsApp",
     "email": "Email",
     "chatOnWhatsapp": "Chat on WhatsApp",
-    "callNow": "Call now"
+    "callNow": "Call now",
+    "heroTitle": "Talk to us",
+    "heroText": "Any question about products, orders, delivery or your crop — we're here to help.",
+    "quick": {
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "directions": "Directions"
+    },
+    "cardsTitle": "Contact details",
+    "visit": "Visit the shop",
+    "visitText": "On M.G. Road, Sailana — talk about your crop face to face.",
+    "callText": "Call directly for the quickest answer.",
+    "whatsappText": "Send a photo of your crop problem or ask about an order.",
+    "emailText": "For bills, documents or detailed questions.",
+    "formTitle": "Send a message",
+    "formText": "Leave your name and mobile — we'll get back to you soon.",
+    "trackTitle": "Want your order status?",
+    "trackText": "Check instantly with your order number and mobile.",
+    "trackLink": "Track order",
+    "faqTitle": "Frequently asked questions",
+    "businessTitle": "Business details"
   },
   "footer": {
     "about": "Sailana's trusted krishi sewa kendra — now online.",
@@ -648,7 +807,15 @@
     "prev": "Previous",
     "next": "Next",
     "page": "Page {page} of {total}",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "quickView": "Quick look at {name}",
+    "closeQuickView": "Close quick look",
+    "viewFull": "See full details",
+    "from": "Starting at",
+    "packCount": "{count} pack sizes available",
+    "crops": "Crop",
+    "allCrops": "All crops",
+    "related": "Related products"
   },
   "product": {
     "inclTax": "(inclusive of all taxes)",
@@ -910,5 +1077,31 @@
     "body": "Sorry, this page could not be loaded. Please try again. If the problem continues, call or WhatsApp us.",
     "retry": "Try again",
     "home": "Go to home page"
+  },
+  "faq": {
+    "delivery": {
+      "q": "Where do you deliver?",
+      "a": "Currently to selected PIN codes in and around Sailana and Ratlam. Enter your PIN code at checkout to see availability and timing. The full list is in our shipping policy."
+    },
+    "payment": {
+      "q": "How do I pay?",
+      "a": "Cash on Delivery for now — pay when your order arrives. Online payment by UPI and card is coming soon."
+    },
+    "genuine": {
+      "q": "Are the products genuine?",
+      "a": "Yes. We are a licensed seller (licence no. 890). Every product is recorded with batch number and expiry, and every order comes with a GST bill."
+    },
+    "track": {
+      "q": "How do I track my order?",
+      "a": "Enter your order number and mobile number on the \"Track order\" page. We also send updates on WhatsApp."
+    },
+    "damaged": {
+      "q": "What if a product arrives damaged or wrong?",
+      "a": "WhatsApp us a photo of the pack within 48 hours of delivery. After checking we'll replace it or refund you."
+    },
+    "advice": {
+      "q": "Which product is right for my crop?",
+      "a": "Filter the product list by crop, or call/WhatsApp us — tell us the crop, its age and the problem, and we'll suggest the right product and dose."
+    }
   }
 }

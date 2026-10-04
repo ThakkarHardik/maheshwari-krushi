@@ -1,7 +1,10 @@
 import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
+import { discountPercent, localized } from "@/lib/format";
 import { PAGE_SIZE, type ListingParams } from "./listing";
+import { sellableQuantity } from "./stock";
+import { summarize } from "./summary";
 
 /** Products a customer may see: active, not deleted, in an active category, with at least one active pack size. */
 const publicProductWhere = {
@@ -18,38 +21,117 @@ const productCardSelect = {
   nameEn: true,
   subLabelHi: true,
   subLabelEn: true,
+  descriptionHi: true,
+  descriptionEn: true,
   minPrice: true,
+  ratingAvg: true,
+  ratingCount: true,
+  category: { select: { nameHi: true, nameEn: true } },
   images: { orderBy: { sortOrder: "asc" }, take: 1, select: { url: true, alt: true } },
   variants: {
     where: { isActive: true },
-    orderBy: { price: "asc" },
-    take: 1,
-    select: { mrp: true, price: true },
+    orderBy: [{ sortOrder: "asc" }, { price: "asc" }],
+    select: {
+      label: true,
+      mrp: true,
+      price: true,
+      batches: { where: { qtyAvailable: { gt: 0 } }, select: { qtyAvailable: true, expiryDate: true } },
+    },
   },
 } satisfies Prisma.ProductSelect;
 
-export type ProductCardData = Prisma.ProductGetPayload<{ select: typeof productCardSelect }>;
+type ProductCardRow = Prisma.ProductGetPayload<{ select: typeof productCardSelect }>;
 
-export function getFeaturedProducts(limit = 8) {
-  return db.product.findMany({
+/** Everything a product card shows — plain, serialisable values for client components. */
+export type ProductCardView = {
+  slug: string;
+  name: string;
+  subLabel: string | null;
+  category: string;
+  imageUrl: string | null;
+  price: string;
+  mrp: string;
+  offPercent: number;
+  packs: string[];
+  inStock: boolean;
+  rating: number;
+  ratingCount: number;
+  summary: string | null;
+};
+
+export function toCardView(p: ProductCardRow, locale: string): ProductCardView {
+  const cheapest = [...p.variants].sort((a, b) => Number(a.price) - Number(b.price))[0];
+  return {
+    slug: p.slug,
+    name: localized(p.nameHi, p.nameEn, locale),
+    subLabel: localized(p.subLabelHi, p.subLabelEn, locale),
+    category: localized(p.category.nameHi, p.category.nameEn, locale),
+    imageUrl: p.images[0]?.url ?? null,
+    price: cheapest?.price.toString() ?? p.minPrice?.toString() ?? "0",
+    mrp: cheapest?.mrp.toString() ?? "0",
+    offPercent: cheapest ? discountPercent(cheapest.mrp, cheapest.price) : 0,
+    packs: p.variants.map((v) => v.label),
+    inStock: p.variants.some((v) => sellableQuantity(v.batches) > 0),
+    rating: p.ratingAvg.toNumber(),
+    ratingCount: p.ratingCount,
+    summary: summarize(localized(p.descriptionHi, p.descriptionEn, locale)),
+  };
+}
+
+export async function getFeaturedProducts(locale: string, limit = 8) {
+  const rows = await db.product.findMany({
     where: { ...publicProductWhere, isFeatured: true },
     orderBy: [{ updatedAt: "desc" }],
     take: limit,
     select: productCardSelect,
   });
+  return rows.map((p) => toCardView(p, locale));
+}
+
+/** Other products from the same category, for the product page. */
+export async function getRelatedProducts(productId: string, categoryId: string, locale: string, limit = 4) {
+  const rows = await db.product.findMany({
+    where: { ...publicProductWhere, categoryId, id: { not: productId } },
+    orderBy: [{ isFeatured: "desc" }, { ratingAvg: "desc" }, { updatedAt: "desc" }],
+    take: limit,
+    select: productCardSelect,
+  });
+  return rows.map((p) => toCardView(p, locale));
 }
 
 export function getStoreCategories() {
   return db.category.findMany({
     where: { isActive: true },
     orderBy: [{ sortOrder: "asc" }, { nameHi: "asc" }],
-    select: { id: true, slug: true, nameHi: true, nameEn: true },
+    select: {
+      id: true,
+      slug: true,
+      nameHi: true,
+      nameEn: true,
+      _count: { select: { products: { where: publicProductWhere } } },
+    },
   });
 }
 
-export async function listProducts(params: ListingParams) {
+/** Crops that have at least one product on sale, for "shop by crop". */
+export async function getStoreCrops() {
+  const crops = await db.crop.findMany({
+    orderBy: { nameHi: "asc" },
+    select: {
+      slug: true,
+      nameHi: true,
+      nameEn: true,
+      seasons: true,
+      _count: { select: { products: { where: { product: publicProductWhere } } } },
+    },
+  });
+  return crops.filter((c) => c._count.products > 0);
+}
+
+export async function listProducts(params: ListingParams, locale: string) {
   const where: Prisma.ProductWhereInput = { ...publicProductWhere };
   if (params.category) where.category = { isActive: true, slug: params.category };
+  if (params.crop) where.crops = { some: { crop: { slug: params.crop } } };
   if (params.q) {
     const contains = { contains: params.q, mode: "insensitive" as const };
     where.OR = [
@@ -67,7 +149,7 @@ export async function listProducts(params: ListingParams) {
         ? [{ minPrice: { sort: "desc", nulls: "last" } }, { id: "asc" }]
         : [{ createdAt: "desc" }, { id: "asc" }];
 
-  const [total, products] = await Promise.all([
+  const [total, rows] = await Promise.all([
     db.product.count({ where }),
     db.product.findMany({
       where,
@@ -77,7 +159,11 @@ export async function listProducts(params: ListingParams) {
       select: productCardSelect,
     }),
   ]);
-  return { total, products, pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+  return {
+    total,
+    products: rows.map((p) => toCardView(p, locale)),
+    pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)),
+  };
 }
 
 export function getProductBySlug(slug: string) {
@@ -86,7 +172,7 @@ export function getProductBySlug(slug: string) {
     include: {
       category: { select: { slug: true, nameHi: true, nameEn: true } },
       images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true } },
-      crops: { select: { crop: { select: { nameHi: true, nameEn: true } } } },
+      crops: { select: { crop: { select: { slug: true, nameHi: true, nameEn: true } } } },
       variants: {
         where: { isActive: true },
         orderBy: [{ sortOrder: "asc" }, { price: "asc" }],

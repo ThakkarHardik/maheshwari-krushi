@@ -62,6 +62,12 @@ Admin panel: http://localhost:3000/admin. Log in with `SEED_OWNER_EMAIL` and `SE
 In production set `STORAGE_DRIVER=cloudinary` and the three `CLOUDINARY_*` variables.
 Uploads are checked by file content (JPG / PNG / WebP only, max 3 MB, max 8 per product).
 
+## About-page photos
+
+The About page shows illustrations until real photos are added. Put the shop's own photos in `public/images/about/` as
+`field.jpg` (fields / crops), `shop.jpg` (the shop front) and `advice.jpg` (advising a farmer) — `.webp` or `.png` also work —
+then rebuild. Landscape photos around 1200×800 look best.
+
 ## Admin roles
 
 | Role | Can do |

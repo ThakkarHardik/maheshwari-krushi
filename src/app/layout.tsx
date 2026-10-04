@@ -28,7 +28,12 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   return (
-    <html lang={locale} className={mukta.variable}>
+    // suppressHydrationWarning: the inline script below adds the "js" class before React loads.
+    <html lang={locale} className={mukta.variable} suppressHydrationWarning>
+      <head>
+        {/* Marks the page as JS-capable so scroll-reveal content is only hidden when it can be revealed. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>

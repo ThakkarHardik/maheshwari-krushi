@@ -26,3 +26,8 @@ export const storeConfig = {
 } as const;
 
 export type StoreConfig = typeof storeConfig;
+
+/** Google Maps search link for the shop (opens the Maps app on phones). */
+export const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${storeConfig.name}, ${storeConfig.address.line1}, ${storeConfig.address.city}, ${storeConfig.address.district} ${storeConfig.address.pincode}`,
+)}`;

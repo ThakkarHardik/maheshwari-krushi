@@ -3,6 +3,7 @@ import { discountPercent, formatINR, localized, localizedList } from "../format"
 import { listingHref, parseListingParams } from "./listing";
 import { categorySchema, fieldErrors, formDataToObject, productSchema, variantSchema } from "./schemas";
 import { linesToList, slugify } from "./slug";
+import { summarize } from "./summary";
 import { nextExpiry, sellableQuantity, totalAvailable } from "./stock";
 
 describe("formatINR", () => {
@@ -153,6 +154,7 @@ describe("listing params", () => {
   it("falls back to safe defaults", () => {
     expect(parseListingParams({ sort: "evil", page: "-3", category: "../x" })).toEqual({
       category: null,
+      crop: null,
       sort: "newest",
       q: null,
       page: 1,
@@ -162,6 +164,7 @@ describe("listing params", () => {
   it("parses valid params", () => {
     expect(parseListingParams({ category: "Seeds", sort: "price-asc", q: "  bhindi ", page: "2" })).toEqual({
       category: "seeds",
+      crop: null,
       sort: "price-asc",
       q: "bhindi",
       page: 2,
@@ -195,5 +198,29 @@ describe("stock helpers", () => {
   it("finds the next expiry among batches that still have stock", () => {
     expect(nextExpiry(batches, now)).toEqual(new Date("2026-12-01"));
     expect(nextExpiry([], now)).toBeNull();
+  });
+});
+
+describe("crop filter params", () => {
+  it("parses and links the crop filter alongside category", () => {
+    expect(parseListingParams({ crop: "Cotton", category: "seeds" })).toMatchObject({
+      crop: "cotton",
+      category: "seeds",
+    });
+    expect(parseListingParams({ crop: "../etc" }).crop).toBeNull();
+    expect(listingHref({ category: "seeds", crop: "cotton" })).toBe("/products?category=seeds&crop=cotton");
+  });
+});
+
+describe("summarize", () => {
+  it("keeps short text and trims long text at a word boundary", () => {
+    expect(summarize(null)).toBeNull();
+    expect(summarize("  छोटा   विवरण ")).toBe("छोटा विवरण");
+    const long =
+      "तार्वर्त पावर एक शक्तिशाली प्लांट टॉनिक है जो पौधों की वृद्धि, फूल और फल बनने की प्रक्रिया को तेजी से बढ़ाता है और उपज में वृद्धि करता है।";
+    const short = summarize(long)!;
+    expect(short.endsWith("…")).toBe(true);
+    expect(short.length).toBeLessThanOrEqual(121);
+    expect(long.startsWith(short.slice(0, -1))).toBe(true);
   });
 });

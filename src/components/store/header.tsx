@@ -31,10 +31,10 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
                 <Link
                   href={link.href}
                   className={cn(
-                    "border-b-2 py-1 transition-colors",
+                    "after:bg-brand-700 relative py-1 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:transition-transform after:duration-300",
                     isActive(pathname, link.href)
-                      ? "border-brand-700 text-brand-800"
-                      : "text-foreground hover:text-brand-700 border-transparent",
+                      ? "text-brand-800 after:scale-x-100"
+                      : "text-foreground hover:text-brand-700 after:scale-x-0 hover:after:scale-x-100",
                   )}
                 >
                   {t(link.key)}
@@ -60,7 +60,10 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
           >
             <ShoppingCart className="size-5" />
             {cartCount > 0 && (
-              <span className="bg-accent-400 text-brand-900 absolute top-1 right-0.5 flex min-w-5 items-center justify-center rounded-full px-1 text-xs leading-5 font-bold">
+              <span
+                key={cartCount}
+                className="animate-scale-in bg-accent-400 text-brand-900 absolute top-1 right-0.5 flex min-w-5 items-center justify-center rounded-full px-1 text-xs leading-5 font-bold"
+              >
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
