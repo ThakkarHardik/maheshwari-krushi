@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Marks the page as JS-capable so scroll-reveal content is only hidden when it can be revealed. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      <body className="min-h-dvh antialiased">
+      <body className="min-h-dvh antialiased" suppressHydrationWarning>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
